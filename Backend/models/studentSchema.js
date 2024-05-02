@@ -9,7 +9,7 @@ const studentSchema = new mongoose.Schema({
     sec: { type: String, required: true},
     rollNumber: { type: Number, required:true },
     bloodGroup: { type: String, required: true},
-    contacts: { type: Number, required: true},    
+    contacts: { type: String, required: true},    
 });
 
 

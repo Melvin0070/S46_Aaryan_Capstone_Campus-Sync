@@ -5,7 +5,11 @@ const feeSchema = new mongoose.Schema({
     ID: { type: String, required: true},
     amount: { type: Number, required: true },
     details: { type: String, required: true },
-    status: { type: String }    
+    status: {
+        type: String,
+        enum: ['paid', 'pending', 'late'],
+        default: 'pending'
+    } 
 });
 
 
