@@ -18,3 +18,31 @@ export const getFeeData = async (req, res) => {
         return res.status(500).json({ message: "Internal server error" });
     }
 };
+
+
+
+// Create a new fee entry
+export const createFee = async (req, res) => {
+    try {
+        // Extract fee data from request body
+        const { name, ID, amount, details, status } = req.body;
+
+        // Check if fee entry with the same ID already exists
+        const existingFee = await Fee.findOne({ ID });
+
+        if (existingFee) {
+            return res.status(400).json({ message: "Fee with the same ID already exists" });
+        }
+
+        // Create a new fee and save to the database
+        const newFee = new Fee({ name, ID, amount, details, status });        
+        await newFee.save();
+
+        // Return success message 
+        return res.status(201).json({ message: "Fee created successfully" });
+
+    } catch (error) {
+        console.error("Error creating fee:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
