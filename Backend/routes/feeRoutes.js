@@ -6,6 +6,6 @@ const router = express.Router();
 const { getFeeData, createFee } = feeController;
 
 router.get("/details", getFeeData);
-router.get("/create", createFee);
+router.post("/create", createFee);
 
 export default router;

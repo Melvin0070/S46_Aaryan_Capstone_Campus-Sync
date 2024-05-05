@@ -6,6 +6,6 @@ const router = express.Router();
 const { getScoreData, createScore } = scoreController;
 
 router.get("/details", getScoreData);
-router.get("/create", createScore);
+router.post("/create", createScore);
 
 export default router;

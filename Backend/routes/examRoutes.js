@@ -6,6 +6,6 @@ const router = express.Router();
 const { getExamData, createExam } = examController;
 
 router.get("/details", getExamData);
-router.get("/create", createExam);
+router.post("/create", createExam);
 
 export default router;

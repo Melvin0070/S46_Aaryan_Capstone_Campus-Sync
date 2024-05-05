@@ -6,6 +6,6 @@ const router = express.Router();
 const { getAlumniData, createAlumni } = alumniController;
 
 router.get("/details", getAlumniData);
-router.get("/create", createAlumni);
+router.post("/create", createAlumni);
 
 export default router;

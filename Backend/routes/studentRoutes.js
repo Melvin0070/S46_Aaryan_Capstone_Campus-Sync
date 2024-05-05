@@ -6,6 +6,6 @@ const router = express.Router();
 const { getStudentData, createStudent } = studentController;
 
 router.get("/details", getStudentData);
-router.get("/create", createStudent);
+router.post("/create", createStudent);
 
 export default router;

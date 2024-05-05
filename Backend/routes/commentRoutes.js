@@ -6,6 +6,6 @@ const router = express.Router();
 const { getCommentData, createComment } = commentController;
 
 router.get("/details", getCommentData);
-router.get("/create", createComment);
+router.post("/create", createComment);
 
 export default router;
