@@ -3,8 +3,9 @@ import * as examController from "../controllers/examController.js";
 
 
 const router = express.Router();
-const { getExamData } = examController;
+const { getExamData, createExam } = examController;
 
 router.get("/details", getExamData);
+router.post("/create", createExam);
 
 export default router;

@@ -18,3 +18,63 @@ export const getUserData = async (req, res) => {
         return res.status(500).json({ message: "Internal server error" });
     }
 };
+
+
+
+// Create a new user(Signup)
+export const createUser = async (req, res) => {
+    try {
+        // Extract user data from request body
+        const { username, ID, email, password } = req.body;
+
+        // Check if user with the same ID already exists
+        const existingUser = await User.findOne({ ID });
+
+        if (existingUser) {
+            return res.status(400).json({ message: "User with the same ID already exists" });
+        }
+
+        // Create a new user instance
+        const newUser = new User({ username, ID, email, password });
+
+        // Save the new user to the database
+        await newUser.save();
+
+        // Return success message with status code 201
+        return res.status(201).json({ message: "User created successfully" });
+
+    } catch (error) {
+        console.error("Error creating user:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+
+
+// Login user
+export const loginUser = async (req, res) => {
+    try {
+        // Extract login credentials from request body
+        const { email, password } = req.body;
+
+        // Find user by email
+        const user = await User.findOne({ email });
+
+        // Check if user exists
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Check if password is correct
+        if (user.password !== password) {
+            return res.status(401).json({ message: "Incorrect password" });
+        }
+
+        // If user exists and password is correct, return success message
+        return res.status(200).json({ message: "Login successful" });
+
+    } catch (error) {
+        console.error("Error logging in:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
