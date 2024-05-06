@@ -46,3 +46,44 @@ export const createStudent = async (req, res) => {
         return res.status(500).json({ message: "Internal server error" });
     }
 };
+
+
+
+// Update an existing student
+export const updateStudent = async (req, res) => {
+    try {
+        // Extract student ID from request parameters
+        const studentId = req.params.id;
+
+        // Extract updated student data from request body
+        const { name, guardian, email, class: studentClass, sec, rollNumber, bloodGroup, contacts } = req.body;
+
+        // Find the student by ID
+        let student = await Student.findOne({ ID: studentId });
+
+        // If student does not exist, return 404 Not Found
+        if (!student) {
+            return res.status(404).json({ message: "Student not found" });
+        }
+
+        // Update student information
+        student.name = name;
+        student.guardian = guardian;
+        student.email = email;
+        student.class = studentClass;
+        student.sec = sec;
+        student.rollNumber = rollNumber;
+        student.bloodGroup = bloodGroup;
+        student.contacts = contacts;
+
+        // Save the updated student information
+        await student.save();
+
+        // Return success message
+        return res.status(200).json({ message: "Student updated successfully" });
+
+    } catch (error) {
+        console.error("Error updating student:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
