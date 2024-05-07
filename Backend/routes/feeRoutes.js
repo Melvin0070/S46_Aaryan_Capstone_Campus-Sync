@@ -3,9 +3,10 @@ import * as feeController from "../controllers/feeController.js";
 
 
 const router = express.Router();
-const { getFeeData, createFee } = feeController;
+const { getFeeData, createFee, updateFee } = feeController;
 
 router.get("/details", getFeeData);
 router.post("/create", createFee);
+router.put("/update/:id", updateFee);
 
 export default router;

@@ -46,3 +46,35 @@ export const createReport = async (req, res) => {
         return res.status(500).json({ message: "Internal server error" });
     }
 };
+
+
+
+// Update an existing report entry
+export const updateReport = async (req, res) => {
+    try {
+        // Extract report ID from request parameters and extract updated report data from request body
+        const reportId = req.params.id;        
+        const { issue, proposal, status, solution } = req.body;
+
+        // Find the report entry by ID and if report entry does not exist, return 404 Not Found
+        let report = await Report.findOne({ ID: reportId });
+
+        if (!report) {
+            return res.status(404).json({ message: "Report not found" });
+        }
+
+        // Update report data with new values and save the updated report data and return success message 
+        report.issue = issue || report.issue;
+        report.proposal = proposal || report.proposal;
+        report.status = status || report.status;
+        report.solution = solution || report.solution;
+        
+        await report.save();
+                
+        return res.status(200).json({ message: "Report updated successfully", report });
+
+    } catch (error) {
+        console.error("Error updating report:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};

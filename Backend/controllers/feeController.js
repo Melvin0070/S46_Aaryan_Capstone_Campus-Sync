@@ -46,3 +46,34 @@ export const createFee = async (req, res) => {
         return res.status(500).json({ message: "Internal server error" });
     }
 };
+
+
+
+// Update an existing fee entry
+export const updateFee = async (req, res) => {
+    try {
+        // Extract fee ID from request parameters and extract updated fee data from request body
+        const feeId = req.params.id;     
+        const { name, amount, details, status } = req.body;
+
+        // Find the fee entry by ID and if fee entry does not exist, return 404 Not Found
+        let fee = await Fee.findOne({ ID: feeId });        
+        if (!fee) {
+            return res.status(404).json({ message: "Fee not found" });
+        }
+
+        // Update fee data with new values and save the updated fee data and return success message 
+        fee.name = name || fee.name;
+        fee.amount = amount || fee.amount;
+        fee.details = details || fee.details;
+        fee.status = status || fee.status;
+        
+        await fee.save();
+        
+        return res.status(200).json({ message: "Fee updated successfully", fee });
+
+    } catch (error) {
+        console.error("Error updating fee:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
