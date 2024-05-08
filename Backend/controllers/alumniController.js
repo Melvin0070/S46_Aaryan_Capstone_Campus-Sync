@@ -46,3 +46,34 @@ export const createAlumni = async (req, res) => {
         return res.status(500).json({ message: "Internal server error" });
     }
 };
+
+
+
+// Update an existing alumni entry
+export const updateAlumni = async (req, res) => {
+    try {
+        // Extract alumni ID from request parameters and extract updated alumni data from request body
+        const alumniId = req.params.id;        
+        const { name, successStory, passout } = req.body;
+
+        // Find the alumni entry by ID and if alumni entry does not exist, return 404 Not Found
+        let foundAlumni = await Alumni.findById(alumniId);
+
+        if (!foundAlumni) {
+            return res.status(404).json({ message: "Alumni not found" });
+        }
+
+        // Update alumni data with new values and save the updated alumni data and return success message 
+        foundAlumni.name = name || foundAlumni.name;
+        foundAlumni.successStory = successStory || foundAlumni.successStory;
+        foundAlumni.passout = passout || foundAlumni.passout;
+
+        await foundAlumni.save();
+        
+        return res.status(200).json({ message: "Alumni updated successfully", alumni: foundAlumni });
+
+    } catch (error) {
+        console.error("Error updating alumni:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};

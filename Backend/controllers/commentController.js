@@ -46,3 +46,34 @@ export const createComment = async (req, res) => {
         return res.status(500).json({ message: "Internal server error" });
     }
 };
+
+
+
+// Update an existing comment entry
+export const updateComment = async (req, res) => {
+    try {
+        // Extract comment ID from request parameters and extract updated comment data from request body
+        const commentId = req.params.id;        
+        const { commenter, comment, likes } = req.body;
+
+        // Find the comment entry by ID and if comment entry does not exist, return 404 Not Found
+        let foundComment = await Comment.findById(commentId);
+        
+        if (!foundComment) {
+            return res.status(404).json({ message: "Comment not found" });
+        }
+
+        // Update comment data with new values and save the updated comment data and return success message
+        foundComment.commenter = commenter || foundComment.commenter;
+        foundComment.comment = comment || foundComment.comment;
+        foundComment.likes = likes || foundComment.likes;
+        
+        await foundComment.save();
+        
+        return res.status(200).json({ message: "Comment updated successfully", comment: foundComment });
+
+    } catch (error) {
+        console.error("Error updating comment:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};

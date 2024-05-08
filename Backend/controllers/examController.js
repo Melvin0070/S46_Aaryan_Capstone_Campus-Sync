@@ -46,3 +46,35 @@ export const createExam = async (req, res) => {
         return res.status(500).json({ message: "Internal server error" });
     }
 };
+
+
+
+// Update an existing exam entry
+export const updateExam = async (req, res) => {
+    try {
+        // Extract exam ID from request parameters and  extract updated exam data from request body
+        const examId = req.params.id;       
+        const { student, exam, date, aggregateScore } = req.body;
+
+        // Find the exam entry by ID and if exam entry does not exist, return 404 Not Found
+        let foundExam = await Exam.findOne({ ID: examId });
+
+        if (!foundExam) {
+            return res.status(404).json({ message: "Exam not found" });
+        }
+
+        // Update exam data with new values and save the updated exam data and return success message 
+        foundExam.student = student || foundExam.student;
+        foundExam.exam = exam || foundExam.exam;
+        foundExam.date = date || foundExam.date;
+        foundExam.aggregateScore = aggregateScore || foundExam.aggregateScore;
+        
+        await foundExam.save();
+
+        return res.status(200).json({ message: "Exam updated successfully", exam: foundExam });
+
+    } catch (error) {
+        console.error("Error updating exam:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
