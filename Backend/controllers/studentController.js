@@ -87,3 +87,28 @@ export const updateStudent = async (req, res) => {
         return res.status(500).json({ message: "Internal server error" });
     }
 };
+
+
+
+// Delete an existing student
+export const deleteStudent = async (req, res) => {
+    try {
+        // Extract student ID from request parameters
+        const studentId = req.params.id;
+
+        // Find the student by ID and delete it
+        const deletedStudent = await Student.findOneAndDelete({ ID: studentId });
+
+        // If student does not exist, return 404 Not Found
+        if (!deletedStudent) {
+            return res.status(404).json({ message: "Student not found" });
+        }
+
+        // Return success message
+        return res.status(200).json({ message: "Student deleted successfully" });
+
+    } catch (error) {
+        console.error("Error deleting student:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
