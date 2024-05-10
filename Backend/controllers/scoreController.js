@@ -75,3 +75,29 @@ export const updateScore = async (req, res) => {
         return res.status(500).json({ message: "Internal server error" });
     }
 };
+
+
+
+// Delete an existing score entry
+export const deleteScore = async (req, res) => {
+    try {
+        // Extract subject from request parameters
+        const subject = req.params.subject;
+
+        // Find the score entry by subject and if the score entry does not exist, return 404 Not Found
+        const existingScore = await Score.findOne({ subject });
+
+        if (!existingScore) {
+            return res.status(404).json({ message: "Score entry not found for the subject" });
+        }
+
+        // Delete the score entry from the database and return success message
+        await existingScore.deleteOne();
+        
+        return res.status(200).json({ message: "Score entry deleted successfully" });
+
+    } catch (error) {
+        console.error("Error deleting score entry:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
