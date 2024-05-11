@@ -78,3 +78,29 @@ export const updateExam = async (req, res) => {
         return res.status(500).json({ message: "Internal server error" });
     }
 };
+
+
+
+// Delete an existing exam entry
+export const deleteExam = async (req, res) => {
+    try {
+        // Extract exam ID from request parameters
+        const examId = req.params.id;
+
+        // Find the exam entry by ID and if the exam entry does not exist, return 404 Not Found
+        const existingExam = await Exam.findOne({ ID: examId });
+        
+        if (!existingExam) {
+            return res.status(404).json({ message: "Exam not found" });
+        }
+
+        // Delete the exam entry from the database and return success message
+        await existingExam.deleteOne();
+       
+        return res.status(200).json({ message: "Exam deleted successfully" });
+
+    } catch (error) {
+        console.error("Error deleting exam:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};

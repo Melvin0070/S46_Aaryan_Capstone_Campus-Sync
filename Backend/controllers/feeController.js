@@ -77,3 +77,29 @@ export const updateFee = async (req, res) => {
         return res.status(500).json({ message: "Internal server error" });
     }
 };
+
+
+
+// Delete an existing fee entry
+export const deleteFee = async (req, res) => {
+    try {
+        // Extract fee ID from request parameters
+        const feeId = req.params.id;
+
+        // Find the fee entry by ID and if the fee entry does not exist, return 404 Not Found
+        const existingFee = await Fee.findOne({ ID: feeId });
+
+        if (!existingFee) {
+            return res.status(404).json({ message: "Fee not found" });
+        }
+
+        // Delete the fee entry from the database and return success message
+        await existingFee.deleteOne();
+        
+        return res.status(200).json({ message: "Fee deleted successfully" });
+
+    } catch (error) {
+        console.error("Error deleting fee:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};

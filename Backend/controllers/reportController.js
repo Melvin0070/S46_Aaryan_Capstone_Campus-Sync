@@ -78,3 +78,29 @@ export const updateReport = async (req, res) => {
         return res.status(500).json({ message: "Internal server error" });
     }
 };
+
+
+
+// Delete an existing report entry
+export const deleteReport = async (req, res) => {
+    try {
+        // Extract report ID from request parameters
+        const reportId = req.params.id;
+
+        // Find the report entry by ID and if the report entry does not exist, return 404 Not Found
+        const existingReport = await Report.findOne({ ID: reportId });
+        
+        if (!existingReport) {
+            return res.status(404).json({ message: "Report not found" });
+        }
+
+        // Delete the report entry from the database and return success message
+        await existingReport.deleteOne();
+        
+        return res.status(200).json({ message: "Report deleted successfully" });
+
+    } catch (error) {
+        console.error("Error deleting report:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};

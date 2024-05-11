@@ -77,3 +77,29 @@ export const updateAlumni = async (req, res) => {
         return res.status(500).json({ message: "Internal server error" });
     }
 };
+
+
+
+// Delete an existing alumni entry
+export const deleteAlumni = async (req, res) => {
+    try {
+        // Extract alumni ID from request parameters
+        const alumniId = req.params.id;
+
+        // Find the alumni entry by ID and if the alumni entry does not exist, return 404 Not Found
+        const existingAlumni = await Alumni.findById(alumniId);
+        
+        if (!existingAlumni) {
+            return res.status(404).json({ message: "Alumni not found" });
+        }
+
+        // Delete the alumni entry from the database and return success message
+        await existingAlumni.deleteOne();
+       
+        return res.status(200).json({ message: "Alumni deleted successfully" });
+
+    } catch (error) {
+        console.error("Error deleting alumni:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};

@@ -77,3 +77,29 @@ export const updateComment = async (req, res) => {
         return res.status(500).json({ message: "Internal server error" });
     }
 };
+
+
+
+// Delete an existing comment entry
+export const deleteComment = async (req, res) => {
+    try {
+        // Extract comment ID from request parameters
+        const commentId = req.params.id;
+
+        // Find the comment entry by ID and if the comment entry does not exist, return 404 Not Found
+        const existingComment = await Comment.findById(commentId);
+        
+        if (!existingComment) {
+            return res.status(404).json({ message: "Comment not found" });
+        }
+
+        // Delete the comment entry from the database and return success message
+        await existingComment.deleteOne();
+        
+        return res.status(200).json({ message: "Comment deleted successfully" });
+
+    } catch (error) {
+        console.error("Error deleting comment:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
