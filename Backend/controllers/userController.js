@@ -80,6 +80,37 @@ export const loginUser = async (req, res) => {
 
 
 
+// Update an existing user
+export const updateUser = async (req, res) => {
+    try {
+        // Extract user ID from request parameters and extract updated user data from request body
+        const userId = req.params.id;
+        const { username, email, password } = req.body;
+
+        // Find the user by ID and if user does not exist, return 404 Not Found
+        let user = await User.findOne({ ID: userId });
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Update user data with new values and save the updated user data and return success message
+        user.username = username || user.username;
+        user.email = email || user.email;
+        user.password = password || user.password;
+
+        await user.save();
+        
+        return res.status(200).json({ message: "User updated successfully", user });
+
+    } catch (error) {
+        console.error("Error updating user:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+
+
 // Delete an existing user
 export const deleteUser = async (req, res) => {
     try {

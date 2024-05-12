@@ -52,21 +52,18 @@ export const createStudent = async (req, res) => {
 // Update an existing student
 export const updateStudent = async (req, res) => {
     try {
-        // Extract student ID from request parameters
-        const studentId = req.params.id;
-
-        // Extract updated student data from request body
+        // Extract student ID from request parameters and updated student data from request body
+        const studentId = req.params.id;        
         const { name, guardian, email, class: studentClass, sec, rollNumber, bloodGroup, contacts } = req.body;
 
-        // Find the student by ID
+        // Find the student by ID and if student does not exist, return 404 Not Found
         let student = await Student.findOne({ ID: studentId });
-
-        // If student does not exist, return 404 Not Found
+        
         if (!student) {
             return res.status(404).json({ message: "Student not found" });
         }
 
-        // Update student information
+        // Update student information and save the updated student information and return success message
         student.name = name;
         student.guardian = guardian;
         student.email = email;
@@ -75,11 +72,9 @@ export const updateStudent = async (req, res) => {
         student.rollNumber = rollNumber;
         student.bloodGroup = bloodGroup;
         student.contacts = contacts;
-
-        // Save the updated student information
+        
         await student.save();
-
-        // Return success message
+        
         return res.status(200).json({ message: "Student updated successfully" });
 
     } catch (error) {
