@@ -8,6 +8,7 @@ const { getScoreData, createScore, updateScore, deleteScore } = scoreController;
 router.get("/details", getScoreData);
 router.post("/create", createScore);
 router.put("/update/:subject", updateScore);
+router.delete("/delete/:id", deleteScore);
 
 
 export default router;
