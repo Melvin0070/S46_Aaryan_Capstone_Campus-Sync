@@ -3,8 +3,8 @@ import Exam from "../models/examSchema.js";
 // Get exam details
 export const getExamData = async (req, res) => {
     try {
-        const examId = req.params.id;
-        const exam = await Exam.findOne({ ID: examId });
+        const ID = req.params.ID;
+        const exam = await Exam.findOne({ ID:ID });
 
         if (!exam) {
             return res.status(404).json({ message: "Exam not found" });

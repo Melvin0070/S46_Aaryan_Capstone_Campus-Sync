@@ -1,13 +1,18 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const scoreSchema = new mongoose.Schema({
-    ID: { type: String, required: true},
-    subject: [{type: String, required: true}],
-    score: [{type: Number, required: true}]
-
-})
+    name: { type: String, required: true },
+    ID: { type: String, required: true },
+    details: [{
+        exam: { type: String},
+        date: { type: String },
+        aggregateScore: { type: String, default: 0 },
+        subjects: [{ type: String, required: true }],
+        scores: [{ type: Number, required: true }]
+    }]
+});
 
 
 const Score = mongoose.model('scores', scoreSchema);
 
-module.exports = { Score }
+export default Score;

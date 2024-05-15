@@ -3,8 +3,8 @@ import Fee from "../models/feeSchema.js";
 // Get fee details
 export const getFeeData = async (req, res) => {
     try {
-        const feeId = req.params.id;
-        const fee = await Fee.findOne({ ID: feeId });
+        const ID = req.params.ID;
+        const fee = await Fee.findOne({ ID:ID });
 
         if (!fee) {
             return res.status(404).json({ message: "Fee not found" });
@@ -39,7 +39,7 @@ export const createFee = async (req, res) => {
         await newFee.save();
 
         // Return success message 
-        return res.status(201).json({ message: "Fee created successfully" });
+        return res.status(201).json({ message: "Fee created successfully", newFee });
 
     } catch (error) {
         console.error("Error creating fee:", error);
@@ -53,11 +53,11 @@ export const createFee = async (req, res) => {
 export const updateFee = async (req, res) => {
     try {
         // Extract fee ID from request parameters and extract updated fee data from request body
-        const feeId = req.params.id;     
+        const ID = req.params.ID;     
         const { name, amount, details, status } = req.body;
 
         // Find the fee entry by ID and if fee entry does not exist, return 404 Not Found
-        let fee = await Fee.findOne({ ID: feeId });        
+        let fee = await Fee.findOne({ ID:ID });        
         if (!fee) {
             return res.status(404).json({ message: "Fee not found" });
         }
@@ -84,10 +84,10 @@ export const updateFee = async (req, res) => {
 export const deleteFee = async (req, res) => {
     try {
         // Extract fee ID from request parameters
-        const feeId = req.params.id;
+        const ID = req.params.ID;
 
         // Find the fee entry by ID and if the fee entry does not exist, return 404 Not Found
-        const existingFee = await Fee.findOne({ ID: feeId });
+        const existingFee = await Fee.findOne({ ID:ID });
 
         if (!existingFee) {
             return res.status(404).json({ message: "Fee not found" });

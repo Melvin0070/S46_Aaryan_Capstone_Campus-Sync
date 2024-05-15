@@ -4,7 +4,7 @@ import User from "../models/userSchema.js";
 export const getUserData = async (req, res) => {
     try {
         const userId = req.params.id;
-        const user = await User.findOne({ ID: userId });
+        const user = await User.findOne({ _id: userId });
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });
@@ -88,7 +88,7 @@ export const updateUser = async (req, res) => {
         const { username, email, password } = req.body;
 
         // Find the user by ID and if user does not exist, return 404 Not Found
-        let user = await User.findOne({ ID: userId });
+        let user = await User.findOne({ _id: userId });
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });
@@ -118,14 +118,14 @@ export const deleteUser = async (req, res) => {
         const userId = req.params.id;
 
         // Find the user by ID and if user does not exist, return 404 Not Found
-        const user = await User.findOne({ ID: userId });
+        const user = await User.findOne({ _id: userId });
         
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
 
         // Delete the user from the database and return success message
-        await User.deleteOne({ ID: userId });
+        await User.deleteOne({ _id: userId });
         
         return res.status(200).json({ message: "User deleted successfully" });
 

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const feeSchema = new mongoose.Schema({
     name: { type: String, required: true },
@@ -17,4 +17,4 @@ const feeSchema = new mongoose.Schema({
 
 const Fee = mongoose.model('fees', feeSchema);
 
-module.exports = { Fee };
+export default Fee;

@@ -3,8 +3,8 @@ import Report from "../models/reportSchema.js";
 // Get report details
 export const getReportData = async (req, res) => {
     try {
-        const reportId = req.params.id;
-        const report = await Report.findOne({ ID: reportId });
+        const ID = req.params.ID;
+        const report = await Report.find({ ID:ID });
 
         if (!report) {
             return res.status(404).json({ message: "Report not found" });
@@ -25,15 +25,8 @@ export const getReportData = async (req, res) => {
 export const createReport = async (req, res) => {
     try {
         // Extract report data from request body
-        const { ID, issue, proposal, status, solution } = req.body;
-
-        // Check if report entry with the same ID already exists
-        const existingReport = await Report.findOne({ ID });
+        const { ID, issue, proposal, status, solution } = req.body;   
         
-        if (existingReport) {
-            return res.status(400).json({ message: "Report with the same ID already exists" });
-        }
-
         // Create a new report and save to the database
         const newReport = new Report({ ID, issue, proposal, status, solution });
         await newReport.save();

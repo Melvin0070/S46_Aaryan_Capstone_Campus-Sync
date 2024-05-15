@@ -1,6 +1,4 @@
-const express = require('express');
-const app = express();
-const port = 3000;
+import express from 'express';
 import userRoutes from "./routes/userRoutes.js";
 import studentRoutes from "./routes/studentRoutes.js";
 import scoreRoutes from "./routes/scoreRoutes.js";
@@ -9,15 +7,18 @@ import feeRoutes from "./routes/feeRoutes.js";
 import examRoutes from "./routes/examRoutes.js";
 import commentRoutes from "./routes/commentRoutes.js";
 import alumniRoutes from "./routes/alumniRoutes.js";
+import { connectToDB, isConnected } from "./database.js";
 
-const {connectToDB, isConnected} = require("./database.js");
+const app = express();
+const port = 1300;
 
+app.use(express.json());
 
 app.get('/status', (req, res) => {
     res.json({
         message: 'pong',
         database: isConnected() ? 'connected' : 'not connected'
-    })
+    });
 });
 
 app.listen(port, async () => {
