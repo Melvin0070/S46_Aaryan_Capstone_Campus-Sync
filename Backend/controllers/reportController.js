@@ -57,10 +57,10 @@ export const updateReport = async (req, res) => {
         }
 
         // Update report data with new values and save the updated report data and return success message 
-        report.issue = issue || report.issue;
-        report.proposal = proposal || report.proposal;
-        report.status = status || report.status;
-        report.solution = solution || report.solution;
+        if (issue) report.issue = issue;
+        if (proposal) report.proposal = proposal;
+        if (status) report.status = status;
+        if (solution) report.solution = solution;
         
         await report.save();
                 

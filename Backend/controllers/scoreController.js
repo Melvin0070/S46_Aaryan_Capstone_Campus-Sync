@@ -4,7 +4,7 @@ import Score from "../models/scoreSchema.js";
 export const getScoreData = async (req, res) => {
     try {
         const ID = req.params.ID;
-        const score = await Score.findOne({ ID:ID });
+        const score = await Score.findOne({ ID: ID });
 
         if (!score) {
             return res.status(404).json({ message: "Scores not found for the student" });
@@ -21,6 +21,7 @@ export const getScoreData = async (req, res) => {
 
 
 
+// Create a new score entry
 export const createScore = async (req, res) => {
     try {
         // Extract name, ID, and exam details from request body
@@ -34,14 +35,14 @@ export const createScore = async (req, res) => {
             existingScore = new Score({
                 name,
                 ID,
-                details: [details] // Push the new exam details into the array
+                details: details
             });
         } else {
             // If score entry exists, push the new exam details into the existing details array
-            existingScore.details.push(details);
+            existingScore.details.push(...details);
         }
 
-        // Save the updated score entry
+        // Save the updated score entry and return success message
         await existingScore.save();
 
         return res.status(201).json({ message: "Score entry created successfully", existingScore });
@@ -54,35 +55,52 @@ export const createScore = async (req, res) => {
 
 
 
-
+// Update an existing score entry
 export const updateScore = async (req, res) => {
     try {
-        // Extract subject from request parameters and updated score data from request body
-        const ID = req.params.ID
-        const { subject, score } = req.body;
+        // Extract student ID and score entry id from request parameters
+        const { ID, id } = req.params;
 
-        // Find the score entry by subject
-        let existingScore = await Score.findOne({ ID:ID });
-        
-        // If score entry does not exist, return 404 Not Found
+        // Extract updated score details from request body
+        const { details } = req.body;
+        const { exam, scores, aggregateScore, subjects, date } = details[0];
+
+        // Find the existing score entry by student ID and if score entry not found, return 404 Not Found
+        let existingScore = await Score.findOne({ ID: ID });
+
         if (!existingScore) {
-            return res.status(404).json({ message: "Score entry not found for the subject" });
+            return res.status(404).json({ message: "Score entry not found" });
         }
 
-        // Update score information
-        existingScore.subject = subject || existingScore.subject;
-        existingScore.score = score || existingScore.score;
+        // Find the specific detail within the score entry by its _id and if detail not found, return 404 Not Found
+        let detail = existingScore.details.id(id);
+
+        if (!detail) {
+            return res.status(404).json({ message: "Exam entry not found" });
+        }
+
+        // Update detail fields if provided
+        if (exam) detail.exam = exam;
+        if (date) detail.date = date;
+        if (aggregateScore) detail.aggregateScore = aggregateScore;
+
+        // Update subjects and scores arrays if provided
+        if (subjects && scores) {
+            detail.subjects = subjects;
+            detail.scores = scores;
+        }
 
         // Save the updated score entry and return success message
-        await existingScore.save();        
-
-        return res.status(200).json({ message: "Score entry updated successfully", existingScore });
+        await existingScore.save();
+       
+        return res.status(200).json({ message: "Exam entry updated successfully" });
 
     } catch (error) {
-        console.error("Error updating score entry:", error);
+        console.error("Error updating detail entry:", error);
         return res.status(500).json({ message: "Internal server error" });
     }
 };
+
 
 
 
@@ -90,19 +108,21 @@ export const updateScore = async (req, res) => {
 export const deleteScore = async (req, res) => {
     try {
         // Extract subject from request parameters
-        const ID = req.params.ID;
+        const { ID, id } = req.params;
 
         // Find the score entry by subject and if the score entry does not exist, return 404 Not Found
-        const existingScore = await Score.findOne({ID:ID});
+        const existingScore = await Score.findOne({ ID: ID });
 
         if (!existingScore) {
-            return res.status(404).json({ message: "Score entry not found for the subject" });
+            return res.status(404).json({ message: "Score entry not found" });
         }
 
-        // Delete the score entry from the database and return success message
-        await existingScore.deleteOne();
-        
-        return res.status(200).json({ message: "Score entry deleted successfully" });
+        // Using pull operator to remove the detail from the details array by its _id and save the updated document
+        existingScore.details.pull({ _id: id });
+
+        await existingScore.save();
+
+        return res.status(200).json({ message: "Exam entry deleted successfully" });
 
     } catch (error) {
         console.error("Error deleting score entry:", error);

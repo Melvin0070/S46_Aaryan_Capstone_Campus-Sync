@@ -64,14 +64,14 @@ export const updateStudent = async (req, res) => {
         }
 
         // Update student information and save the updated student information and return success message
-        student.name = name || student.name;
-        student.guardian = guardian || student.guardian;
-        student.email = email || student.email;
-        student.class = studentClass || student.class;
-        student.sec = sec || student.sec;
-        student.rollNumber = rollNumber || student.rollNumber;
-        student.bloodGroup = bloodGroup || student.bloodGroup;
-        student.contacts = contacts || student.contacts;
+        if (name) student.name = name;
+        if (guardian) student.guardian = guardian;
+        if (email) student.email = email;
+        if (studentClass) student.class = studentClass;
+        if (sec) student.sec = sec;
+        if (rollNumber) student.rollNumber = rollNumber;
+        if (bloodGroup) student.bloodGroup = bloodGroup;
+        if (contacts) student.contacts = contacts ;
         
         await student.save();
         

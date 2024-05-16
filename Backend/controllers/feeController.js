@@ -63,10 +63,10 @@ export const updateFee = async (req, res) => {
         }
 
         // Update fee data with new values and save the updated fee data and return success message 
-        fee.name = name || fee.name;
-        fee.amount = amount || fee.amount;
-        fee.details = details || fee.details;
-        fee.status = status || fee.status;
+        if (name) fee.name = name;
+        if (amount) fee.amount = amount;
+        if (details) fee.details = details;
+        if (status) fee.status = status;
         
         await fee.save();
         

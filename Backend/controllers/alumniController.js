@@ -1,20 +1,15 @@
 import Alumni from "../models/alumniSchema.js";
 
-// Get alumni details
+// Get all alumnis
 export const getAlumniData = async (req, res) => {
     try {
-        const alumniId = req.params.id;
-        const alumni = await Alumni.findById(alumniId);
+        // Retrieve all alumnis from the database and return the alumnis
+        const alumnis = await Alumni.find({});
 
-        if (!alumni) {
-            return res.status(404).json({ message: "Alumni not found" });
-        }
-
-        // If alumni is found, return the alumni data
-        return res.status(200).json(alumni);
+        return res.status(200).json(alumnis);
         
     } catch (error) {
-        console.error("Error fetching alumni:", error);
+        console.error("Error fetching alumnis:", error);
         return res.status(500).json({ message: "Internal server error" });
     }
 };
@@ -28,10 +23,10 @@ export const createAlumni = async (req, res) => {
         const { name, successStory, passout } = req.body;
 
         // Check if an alumni entry with the same name already exists
-        const existingAlumni = await Alumni.findOne({ name });
+        const existingAlumni = await Alumni.findOne({ name, successStory, passout });
 
         if (existingAlumni) {
-            return res.status(400).json({ message: "Alumni with the same name already exists" });
+            return res.status(400).json({ message: "Alumni with the same data already exists" });
         }
 
         // Create a new alumni and save to the database
@@ -53,20 +48,20 @@ export const createAlumni = async (req, res) => {
 export const updateAlumni = async (req, res) => {
     try {
         // Extract alumni ID from request parameters and extract updated alumni data from request body
-        const alumniId = req.params.id;        
+        const _id = req.params.id;        
         const { name, successStory, passout } = req.body;
 
         // Find the alumni entry by ID and if alumni entry does not exist, return 404 Not Found
-        let foundAlumni = await Alumni.findById(alumniId);
+        let foundAlumni = await Alumni.findById(_id);
 
         if (!foundAlumni) {
             return res.status(404).json({ message: "Alumni not found" });
         }
 
         // Update alumni data with new values and save the updated alumni data and return success message 
-        foundAlumni.name = name || foundAlumni.name;
-        foundAlumni.successStory = successStory || foundAlumni.successStory;
-        foundAlumni.passout = passout || foundAlumni.passout;
+        if (name) foundAlumni.name = name 
+        if (successStory) foundAlumni.successStory = successStory 
+        if (passout) foundAlumni.passout = passout
 
         await foundAlumni.save();
         
@@ -84,10 +79,10 @@ export const updateAlumni = async (req, res) => {
 export const deleteAlumni = async (req, res) => {
     try {
         // Extract alumni ID from request parameters
-        const alumniId = req.params.id;
+        const _id = req.params.id;
 
         // Find the alumni entry by ID and if the alumni entry does not exist, return 404 Not Found
-        const existingAlumni = await Alumni.findById(alumniId);
+        const existingAlumni = await Alumni.findById(_id);
         
         if (!existingAlumni) {
             return res.status(404).json({ message: "Alumni not found" });
