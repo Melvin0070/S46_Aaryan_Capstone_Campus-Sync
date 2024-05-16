@@ -1,5 +1,7 @@
-const mongoose = require('mongoose');
-require("dotenv").config()
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const connectToDB = async () => {
     try {
@@ -10,12 +12,8 @@ const connectToDB = async () => {
     }
 };
 
-const isConnected = () =>{
+const isConnected = () => {
     return mongoose.connection.readyState === 1;
-}
-
-
-module.exports = {
-    connectToDB,
-    isConnected,
 };
+
+export { connectToDB, isConnected };

@@ -3,8 +3,8 @@ import Fee from "../models/feeSchema.js";
 // Get fee details
 export const getFeeData = async (req, res) => {
     try {
-        const feeId = req.params.id;
-        const fee = await Fee.findOne({ ID: feeId });
+        const ID = req.params.ID;
+        const fee = await Fee.findOne({ ID:ID });
 
         if (!fee) {
             return res.status(404).json({ message: "Fee not found" });
@@ -39,7 +39,7 @@ export const createFee = async (req, res) => {
         await newFee.save();
 
         // Return success message 
-        return res.status(201).json({ message: "Fee created successfully" });
+        return res.status(201).json({ message: "Fee created successfully", newFee });
 
     } catch (error) {
         console.error("Error creating fee:", error);
@@ -53,20 +53,20 @@ export const createFee = async (req, res) => {
 export const updateFee = async (req, res) => {
     try {
         // Extract fee ID from request parameters and extract updated fee data from request body
-        const feeId = req.params.id;     
+        const ID = req.params.ID;     
         const { name, amount, details, status } = req.body;
 
         // Find the fee entry by ID and if fee entry does not exist, return 404 Not Found
-        let fee = await Fee.findOne({ ID: feeId });        
+        let fee = await Fee.findOne({ ID:ID });        
         if (!fee) {
             return res.status(404).json({ message: "Fee not found" });
         }
 
         // Update fee data with new values and save the updated fee data and return success message 
-        fee.name = name || fee.name;
-        fee.amount = amount || fee.amount;
-        fee.details = details || fee.details;
-        fee.status = status || fee.status;
+        if (name) fee.name = name;
+        if (amount) fee.amount = amount;
+        if (details) fee.details = details;
+        if (status) fee.status = status;
         
         await fee.save();
         
@@ -74,6 +74,32 @@ export const updateFee = async (req, res) => {
 
     } catch (error) {
         console.error("Error updating fee:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+
+
+// Delete an existing fee entry
+export const deleteFee = async (req, res) => {
+    try {
+        // Extract fee ID from request parameters
+        const ID = req.params.ID;
+
+        // Find the fee entry by ID and if the fee entry does not exist, return 404 Not Found
+        const existingFee = await Fee.findOne({ ID:ID });
+
+        if (!existingFee) {
+            return res.status(404).json({ message: "Fee not found" });
+        }
+
+        // Delete the fee entry from the database and return success message
+        await existingFee.deleteOne();
+        
+        return res.status(200).json({ message: "Fee deleted successfully" });
+
+    } catch (error) {
+        console.error("Error deleting fee:", error);
         return res.status(500).json({ message: "Internal server error" });
     }
 };

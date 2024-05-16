@@ -3,8 +3,8 @@ import Report from "../models/reportSchema.js";
 // Get report details
 export const getReportData = async (req, res) => {
     try {
-        const reportId = req.params.id;
-        const report = await Report.findOne({ ID: reportId });
+        const ID = req.params.ID;
+        const report = await Report.find({ ID:ID });
 
         if (!report) {
             return res.status(404).json({ message: "Report not found" });
@@ -25,15 +25,8 @@ export const getReportData = async (req, res) => {
 export const createReport = async (req, res) => {
     try {
         // Extract report data from request body
-        const { ID, issue, proposal, status, solution } = req.body;
-
-        // Check if report entry with the same ID already exists
-        const existingReport = await Report.findOne({ ID });
+        const { ID, issue, proposal, status, solution } = req.body;   
         
-        if (existingReport) {
-            return res.status(400).json({ message: "Report with the same ID already exists" });
-        }
-
         // Create a new report and save to the database
         const newReport = new Report({ ID, issue, proposal, status, solution });
         await newReport.save();
@@ -64,10 +57,10 @@ export const updateReport = async (req, res) => {
         }
 
         // Update report data with new values and save the updated report data and return success message 
-        report.issue = issue || report.issue;
-        report.proposal = proposal || report.proposal;
-        report.status = status || report.status;
-        report.solution = solution || report.solution;
+        if (issue) report.issue = issue;
+        if (proposal) report.proposal = proposal;
+        if (status) report.status = status;
+        if (solution) report.solution = solution;
         
         await report.save();
                 
@@ -75,6 +68,32 @@ export const updateReport = async (req, res) => {
 
     } catch (error) {
         console.error("Error updating report:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+
+
+// Delete an existing report entry
+export const deleteReport = async (req, res) => {
+    try {
+        // Extract report ID from request parameters
+        const reportId = req.params.id;
+
+        // Find the report entry by ID and if the report entry does not exist, return 404 Not Found
+        const existingReport = await Report.findOne({ ID: reportId });
+        
+        if (!existingReport) {
+            return res.status(404).json({ message: "Report not found" });
+        }
+
+        // Delete the report entry from the database and return success message
+        await existingReport.deleteOne();
+        
+        return res.status(200).json({ message: "Report deleted successfully" });
+
+    } catch (error) {
+        console.error("Error deleting report:", error);
         return res.status(500).json({ message: "Internal server error" });
     }
 };

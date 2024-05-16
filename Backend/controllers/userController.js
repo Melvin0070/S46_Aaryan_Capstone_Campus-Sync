@@ -4,7 +4,7 @@ import User from "../models/userSchema.js";
 export const getUserData = async (req, res) => {
     try {
         const userId = req.params.id;
-        const user = await User.findOne({ ID: userId });
+        const user = await User.findOne({ _id: userId });
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });
@@ -37,10 +37,9 @@ export const createUser = async (req, res) => {
         // Create a new user instance
         const newUser = new User({ username, ID, email, password });
 
-        // Save the new user to the database
+        // Save the new user to the database and return success message with status code 201
         await newUser.save();
-
-        // Return success message with status code 201
+        
         return res.status(201).json({ message: "User created successfully" });
 
     } catch (error) {
@@ -75,6 +74,32 @@ export const loginUser = async (req, res) => {
 
     } catch (error) {
         console.error("Error logging in:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+
+
+// Delete an existing user
+export const deleteUser = async (req, res) => {
+    try {
+        // Extract user ID from request parameters
+        const userId = req.params.id;
+
+        // Find the user by ID and if user does not exist, return 404 Not Found
+        const user = await User.findOne({ _id: userId });
+        
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Delete the user from the database and return success message
+        await User.deleteOne({ _id: userId });
+        
+        return res.status(200).json({ message: "User deleted successfully" });
+
+    } catch (error) {
+        console.error("Error deleting user:", error);
         return res.status(500).json({ message: "Internal server error" });
     }
 };

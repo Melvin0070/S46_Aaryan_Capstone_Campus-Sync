@@ -1,17 +1,17 @@
 import Score from "../models/scoreSchema.js";
 
-// Get score details
+// Get score details by student ID
 export const getScoreData = async (req, res) => {
     try {
-        const subject = req.params.subject;
-        const scores = await Score.find({ subject });
+        const ID = req.params.ID;
+        const score = await Score.findOne({ ID: ID });
 
-        if (scores.length === 0) {
-            return res.status(404).json({ message: "Scores not found for the subject" });
+        if (!score) {
+            return res.status(404).json({ message: "Scores not found for the student" });
         }
 
-        // If scores are found, return the score data (subject and score)
-        return res.status(200).json(scores.map(score => ({ subject: score.subject, score: score.score })));
+        // If score is found, return the score data
+        return res.status(200).json(score);
 
     } catch (error) {
         console.error("Error fetching scores:", error);
@@ -24,22 +24,28 @@ export const getScoreData = async (req, res) => {
 // Create a new score entry
 export const createScore = async (req, res) => {
     try {
-        // Extract score data from request body
-        const { subject, score } = req.body;
+        // Extract name, ID, and exam details from request body
+        const { name, ID, details } = req.body;
 
-        // Check if score entry with the same subject already exists
-        const existingScore = await Score.findOne({ subject });
+        // Find the score entry by student ID
+        let existingScore = await Score.findOne({ ID: ID });
 
-        if (existingScore) {
-            return res.status(400).json({ message: "Score entry for the subject already exists" });
+        if (!existingScore) {
+            // If score entry does not exist, create a new one
+            existingScore = new Score({
+                name,
+                ID,
+                details: details
+            });
+        } else {
+            // If score entry exists, push the new exam details into the existing details array
+            existingScore.details.push(...details);
         }
 
-        // Create a new score and save to the database
-        const newScore = new Score({ subject, score });        
-        await newScore.save();
+        // Save the updated score entry and return success message
+        await existingScore.save();
 
-        // Return success message 
-        return res.status(201).json({ message: "Score entry created successfully" });
+        return res.status(201).json({ message: "Score entry created successfully", existingScore });
 
     } catch (error) {
         console.error("Error creating score entry:", error);
@@ -52,26 +58,74 @@ export const createScore = async (req, res) => {
 // Update an existing score entry
 export const updateScore = async (req, res) => {
     try {
-        // Extract subject from request parameters and updated score data from request body
-        const oldSubject = req.params.subject;        
-        const { subject: newSubject, score: updatedScore } = req.body;
+        // Extract student ID and score entry id from request parameters
+        const { ID, id } = req.params;
 
-        // Find the score entry by subject and if score entry does not exist, return 404 Not Found
-        let existingScore = await Score.findOne({ subject: oldSubject });
-        
+        // Extract updated score details from request body
+        const { details } = req.body;
+        const { exam, scores, aggregateScore, subjects, date } = details[0];
+
+        // Find the existing score entry by student ID and if score entry not found, return 404 Not Found
+        let existingScore = await Score.findOne({ ID: ID });
+
         if (!existingScore) {
-            return res.status(404).json({ message: "Score entry not found for the subject" });
+            return res.status(404).json({ message: "Score entry not found" });
         }
 
-        // Update score information and save the updated score entry and return success message
-        existingScore.subject = newSubject || existingScore.subject; 
-        existingScore.score = updatedScore;
-        
-        await existingScore.save();        
-        return res.status(200).json({ message: "Score entry updated successfully" });
+        // Find the specific detail within the score entry by its _id and if detail not found, return 404 Not Found
+        let detail = existingScore.details.id(id);
+
+        if (!detail) {
+            return res.status(404).json({ message: "Exam entry not found" });
+        }
+
+        // Update detail fields if provided
+        if (exam) detail.exam = exam;
+        if (date) detail.date = date;
+        if (aggregateScore) detail.aggregateScore = aggregateScore;
+
+        // Update subjects and scores arrays if provided
+        if (subjects && scores) {
+            detail.subjects = subjects;
+            detail.scores = scores;
+        }
+
+        // Save the updated score entry and return success message
+        await existingScore.save();
+       
+        return res.status(200).json({ message: "Exam entry updated successfully" });
 
     } catch (error) {
-        console.error("Error updating score entry:", error);
+        console.error("Error updating detail entry:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+
+
+
+// Delete an existing score entry
+export const deleteScore = async (req, res) => {
+    try {
+        // Extract subject from request parameters
+        const { ID, id } = req.params;
+
+        // Find the score entry by subject and if the score entry does not exist, return 404 Not Found
+        const existingScore = await Score.findOne({ ID: ID });
+
+        if (!existingScore) {
+            return res.status(404).json({ message: "Score entry not found" });
+        }
+
+        // Using pull operator to remove the detail from the details array by its _id and save the updated document
+        existingScore.details.pull({ _id: id });
+
+        await existingScore.save();
+
+        return res.status(200).json({ message: "Exam entry deleted successfully" });
+
+    } catch (error) {
+        console.error("Error deleting score entry:", error);
         return res.status(500).json({ message: "Internal server error" });
     }
 };
