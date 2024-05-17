@@ -1,0 +1,17 @@
+meta {
+  name: Update an Alumni
+  type: http
+  seq: 3
+}
+
+put {
+  url: http://localhost:1300/alumnis/update/66463f5dbdbf6b3ff244d903
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "passout": 0
+  }
+}

@@ -1,0 +1,21 @@
+meta {
+  name: Update fees
+  type: http
+  seq: 3
+}
+
+put {
+  url: http://localhost:1300/fees/update/ADMN2004
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Aaryan Panda",
+    "ID": "ADMN2009",
+    "amount": 100000,
+    "details": "July-August Tuition Fees",
+    "status": "pending"
+  }
+}

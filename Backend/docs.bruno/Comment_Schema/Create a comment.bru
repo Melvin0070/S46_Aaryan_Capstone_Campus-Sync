@@ -1,0 +1,18 @@
+meta {
+  name: Create a comment
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:1300/comments/create
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "commenter": "Aaryan16",
+    "comment": "I like demo"
+  }
+}
