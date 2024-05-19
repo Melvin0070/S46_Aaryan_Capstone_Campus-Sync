@@ -1,0 +1,19 @@
+meta {
+  name: Create report
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:1300/reports/create
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "ID": "ADMN2010",
+    "issue": "Hot demo",
+    "proposal": "Cool demo"
+  }
+}

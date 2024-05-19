@@ -1,0 +1,17 @@
+meta {
+  name: Update Report
+  type: http
+  seq: 3
+}
+
+put {
+  url: http://localhost:1300/reports/update/66478eae013b955fd442b552
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "solution": "on the way"
+  }
+}

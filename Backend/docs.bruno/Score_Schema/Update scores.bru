@@ -1,0 +1,26 @@
+meta {
+  name: Update scores
+  type: http
+  seq: 3
+}
+
+put {
+  url: http://localhost:1300/scores/update/ADMN2005/6645dee03f142930bfa8b5a4
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "ID": "ADMN2005",
+    "details": [
+      {
+        "exam": "End-Sem Examinations",
+        "aggregateScore": "470/500",
+        "subjects": ["Bio"],
+        "scores": [80],
+        "date": "16th May, 2024"
+      }
+    ]
+  }
+}

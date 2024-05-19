@@ -25,14 +25,14 @@ export const getReportData = async (req, res) => {
 export const createReport = async (req, res) => {
     try {
         // Extract report data from request body
-        const { ID, issue, proposal, status, solution } = req.body;   
+        const { ID, issue, proposal } = req.body;   
         
         // Create a new report and save to the database
-        const newReport = new Report({ ID, issue, proposal, status, solution });
+        const newReport = new Report({ ID, issue, proposal, solution: '' });
         await newReport.save();
 
         // Return success message 
-        return res.status(201).json({ message: "Report created successfully" });
+        return res.status(201).json({ message: "Report created successfully", newReport });
 
     } catch (error) {
         console.error("Error creating report:", error);
@@ -42,58 +42,30 @@ export const createReport = async (req, res) => {
 
 
 
-// Update an existing report entry
-export const updateReport = async (req, res) => {
+// Update the solution field and set status to closed
+export const updateSolution = async (req, res) => {
     try {
-        // Extract report ID from request parameters and extract updated report data from request body
-        const reportId = req.params.id;        
-        const { issue, proposal, status, solution } = req.body;
+        // Extract the report ID from the request parameters and the solution from the request body
+        const _id = req.params.id;
+        const { solution } = req.body;
 
-        // Find the report entry by ID and if report entry does not exist, return 404 Not Found
-        let report = await Report.findOne({ ID: reportId });
+        // Find the report by its ID and update the solution and status fields
+        const updatedReport = await Report.findByIdAndUpdate(
+            _id,
+            { solution: solution, status: 'closed' },
+            { new: true }
+        );
 
-        if (!report) {
-            return res.status(404).json({ message: "Report not found" });
+        // If the report is not found, return a 404 Not Found response
+        if (!updatedReport) {
+            return res.status(404).json({ message: 'Report not found' });
         }
 
-        // Update report data with new values and save the updated report data and return success message 
-        if (issue) report.issue = issue;
-        if (proposal) report.proposal = proposal;
-        if (status) report.status = status;
-        if (solution) report.solution = solution;
-        
-        await report.save();
-                
-        return res.status(200).json({ message: "Report updated successfully", report });
+        // Return the updated report
+        return res.json(updatedReport);
 
     } catch (error) {
-        console.error("Error updating report:", error);
-        return res.status(500).json({ message: "Internal server error" });
-    }
-};
-
-
-
-// Delete an existing report entry
-export const deleteReport = async (req, res) => {
-    try {
-        // Extract report ID from request parameters
-        const reportId = req.params.id;
-
-        // Find the report entry by ID and if the report entry does not exist, return 404 Not Found
-        const existingReport = await Report.findOne({ ID: reportId });
-        
-        if (!existingReport) {
-            return res.status(404).json({ message: "Report not found" });
-        }
-
-        // Delete the report entry from the database and return success message
-        await existingReport.deleteOne();
-        
-        return res.status(200).json({ message: "Report deleted successfully" });
-
-    } catch (error) {
-        console.error("Error deleting report:", error);
+        console.error("Error updating solution:", error);
         return res.status(500).json({ message: "Internal server error" });
     }
 };

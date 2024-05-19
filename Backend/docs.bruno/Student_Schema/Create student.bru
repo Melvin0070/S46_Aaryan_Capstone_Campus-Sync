@@ -1,0 +1,25 @@
+meta {
+  name: Create student
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:1300/students/create
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Aaryan15",
+    "guardian": "Arundhati15",
+    "ID": "ADMN2009",
+    "email": "aaryanpanda5@gmail.com",
+    "class": "10th",
+    "sec": "A",
+    "rollNumber": 6,
+    "bloodGroup": "O+ve",
+    "contacts": "9988776655"
+  }
+}

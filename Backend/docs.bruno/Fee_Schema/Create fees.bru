@@ -1,0 +1,21 @@
+meta {
+  name: Create fees
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:1300/fees/create
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Aaryan Panda",
+    "ID": "ADMN2009",
+    "amount": 0,
+    "details": "July-August Tuition Fees",
+    "status": "pending"
+  }
+}

@@ -1,0 +1,19 @@
+meta {
+  name: Create an Alumni
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:1300/alumnis/create
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "demo22222",
+    "successStory": "Serving22222",
+    "passout": 2024
+  }
+}
