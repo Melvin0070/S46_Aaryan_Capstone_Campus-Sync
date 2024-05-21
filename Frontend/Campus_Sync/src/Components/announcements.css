@@ -1,0 +1,41 @@
+#announcements-heading {
+    margin: 50px 0 0 50px;
+    font-size: 32px;
+    font-weight: 700;
+}
+
+#announce-divs {}
+
+.announcement-div {
+    height: 43px;
+    width: 600px;
+    background-color: #e0e9f3;
+    margin: 15px 0 25px 65px;
+    border-radius: 3px;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.7);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.announcement-div:hover {
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7), 2px 3px 6px rgba(0, 0, 0, 0.7);
+    transform: translateY(-3px);
+}
+
+.announcement-div:active {
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.7);
+}
+
+.announcement-div p {
+    margin: 0 15px;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.announcement-div img {
+    height: 22px;
+    margin: 0 15px;
+}
