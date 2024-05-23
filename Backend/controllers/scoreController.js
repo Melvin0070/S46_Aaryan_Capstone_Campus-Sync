@@ -62,7 +62,7 @@ export const updateScore = async (req, res) => {
         const { ID, id } = req.params;
 
         // Extract updated score details from request body
-        const { details } = req.body;
+        const { name, details } = req.body;
         const { exam, scores, aggregateScore, subjects, date } = details[0];
 
         // Find the existing score entry by student ID and if score entry not found, return 404 Not Found
@@ -70,6 +70,10 @@ export const updateScore = async (req, res) => {
 
         if (!existingScore) {
             return res.status(404).json({ message: "Score entry not found" });
+        }
+
+        if (name) {
+            existingScore.name = name; //update the name
         }
 
         // Find the specific detail within the score entry by its _id and if detail not found, return 404 Not Found

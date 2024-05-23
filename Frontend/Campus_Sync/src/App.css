@@ -3,3 +3,8 @@
 * {
     font-family: "Inter", sans-serif;
 }
+
+.link-tag {
+    text-decoration: none;
+    color: inherit;
+}

@@ -6,9 +6,10 @@ import "./Home.css"
 import Announcements from "../Components/announcements";
 
 function Home() {
+
   return (
     <>
-      <Navbar />
+      <Navbar showDashboard={true} />
 
       <div id="home-main-div">
         <Sidebar />

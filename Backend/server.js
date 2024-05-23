@@ -7,11 +7,13 @@ import feeRoutes from "./routes/feeRoutes.js";
 import commentRoutes from "./routes/commentRoutes.js";
 import alumniRoutes from "./routes/alumniRoutes.js";
 import { connectToDB, isConnected } from "./database.js";
+import cors from 'cors';
 
 const app = express();
 const port = 1300;
 
 app.use(express.json());
+app.use(cors());
 
 app.get('/status', (req, res) => {
     res.json({

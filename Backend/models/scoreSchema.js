@@ -10,6 +10,7 @@ const detailSchema = new mongoose.Schema({
 
 const scoreSchema = new mongoose.Schema({
     ID: { type: String, required: true },
+    name: { type: String, required: true },
     details: [detailSchema]
 });
 

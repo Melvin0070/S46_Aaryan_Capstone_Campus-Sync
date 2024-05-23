@@ -10,15 +10,23 @@
 
 .sidebar-buttons {
     background-color: #f8f8f8;
-    margin: 22px 60px;
+    margin: 22px auto;
+    width: 230px;
     padding: 8px;
     display: flex;
     justify-content: center;
-    align-items:first baseline;
+    align-items: first baseline;
     border-radius: 3px;
     font-size: 18px;
     font-weight: 500;
+    cursor: pointer;
+    transition: box-shadow 0.2s ease, transform 0.2s ease, scale 0.2s ease;
 }
+
+.sidebar-buttons:active {
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.6); 
+    transform: translateY(4px); 
+  }
 
 .sidebar-img-p {
     display: flex;
@@ -41,6 +49,13 @@
 }
 
 #logout-div {
-    background-color: #000080d9;
-    color: white;    
+    background-color: #000080d1;
+    color: white;
+}
+
+#logout-div:active {   
+    box-shadow: none;
+    background-color: #00005b;
+    transform: translateY(0);
+    scale: 0.95;
 }
