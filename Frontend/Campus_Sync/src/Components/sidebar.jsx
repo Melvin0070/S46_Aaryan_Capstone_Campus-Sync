@@ -32,7 +32,7 @@ function Sidebar() {
           <div className="sidebar-buttons">
             <div className="sidebar-img-p">
               <img src={fee} alt="fee" />
-              <p>Fee Breakdown</p>
+              <p>Fee Payment</p>
             </div>
           </div>
         </Link>

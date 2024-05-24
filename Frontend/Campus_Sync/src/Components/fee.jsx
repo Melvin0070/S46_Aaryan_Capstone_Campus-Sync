@@ -31,7 +31,13 @@ function Fee() {
   return (
     <div>
       <div id="fee-box">
-        <div>Details</div>
+        <div>Fee Payment Details</div>
+        <div>
+          <p>Name: {feeDetails.name}</p>
+          <p>Student ID: {feeDetails.ID}</p>
+          <p>Amount Due: Rs. {feeDetails.amount}</p>
+          <p>Fee Breakdown: {feeDetails.details}</p>
+        </div>
       </div>
     </div>
   );

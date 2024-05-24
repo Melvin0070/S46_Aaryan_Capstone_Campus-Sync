@@ -15,7 +15,7 @@ function Fees() {
         <div id="sidebar-divs-container">
           {isSidebarVisible && <Sidebar/>}
           <div id="hamburger-result-container">
-            <Hamburger name="Fee Breakdown" toggleSidebar={toggleSidebar} />
+            <Hamburger name="Fee Payment" toggleSidebar={toggleSidebar} />
             <Fee/>
           </div>
         </div>
