@@ -7,8 +7,8 @@ const feeSchema = new mongoose.Schema({
     details: { type: String, required: true },
     status: {
         type: String,
-        enum: ['paid', 'pending', 'late'],
-        default: 'pending'
+        enum: ['Paid', 'Pending', 'Late'],
+        default: 'Pending'
     } 
 });
 

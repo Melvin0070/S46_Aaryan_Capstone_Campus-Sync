@@ -31,12 +31,13 @@ function Fee() {
   return (
     <div>
       <div id="fee-box">
-        <div>Fee Payment Details</div>
-        <div>
-          <p>Name: {feeDetails.name}</p>
-          <p>Student ID: {feeDetails.ID}</p>
-          <p>Amount Due: Rs. {feeDetails.amount}</p>
-          <p>Fee Breakdown: {feeDetails.details}</p>
+        <div id="fee-heading">Fee Payment Details</div>
+        <div id="fee-details">
+          <p>Name: <span>{feeDetails.name}</span></p>
+          <p>Student ID: <span>{feeDetails.ID}</span></p>
+          <p>Amount Due: <span>Rs. {feeDetails.amount}</span> </p>
+          <p>Fee Breakdown: <span id="fee-breakdown">{feeDetails.details}</span></p>
+          <p>Payment Status: <span>{feeDetails.status}</span></p>
         </div>
       </div>
     </div>

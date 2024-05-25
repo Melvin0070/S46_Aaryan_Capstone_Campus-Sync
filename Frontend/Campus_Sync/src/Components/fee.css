@@ -2,6 +2,34 @@
     margin: 5% 10%;
     height: 400px;
     width: 600px;
-    background-color: #f7eaec;
+    background-color: #eaf7f4;
     border-radius: 6px;
+}
+
+#fee-heading {
+    display: flex;
+    justify-content: center;
+    padding: 30px;
+    font-size: 24px;
+    font-weight: 500;
+    text-decoration: underline;
+}
+
+#fee-details {
+    display: flex;
+    flex-direction: column;
+    margin: 15px 40px;
+    font-size: 16px;
+}
+
+#fee-details p {
+    margin: 5px 0;
+}
+
+#fee-details p span {
+    font-weight: 500;
+}
+
+#fee-breakdown {
+    line-height: 25px;
 }
