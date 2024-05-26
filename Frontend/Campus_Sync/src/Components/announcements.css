@@ -18,13 +18,8 @@
     transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
-.announcement-div:hover {
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7), 2px 3px 6px rgba(0, 0, 0, 0.7);
-    transform: translateY(-3px);
-}
-
 .announcement-div:active {
-    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.7);
+    box-shadow: none;
 }
 
 .announcement-div p {

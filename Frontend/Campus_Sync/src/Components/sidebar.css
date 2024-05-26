@@ -51,11 +51,11 @@
 #logout-div {
     background-color: #000080d1;
     color: white;
+    transition: all 0.75s ease;
 }
 
 #logout-div:active {   
     box-shadow: none;
     background-color: #00005b;
-    transform: translateY(0);
-    scale: 0.95;
+    scale: 0.90;
 }

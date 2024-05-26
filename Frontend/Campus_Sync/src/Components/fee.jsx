@@ -33,11 +33,24 @@ function Fee() {
       <div id="fee-box">
         <div id="fee-heading">Fee Payment Details</div>
         <div id="fee-details">
-          <p>Name: <span>{feeDetails.name}</span></p>
-          <p>Student ID: <span>{feeDetails.ID}</span></p>
-          <p>Amount Due: <span>Rs. {feeDetails.amount}</span> </p>
-          <p>Fee Breakdown: <span id="fee-breakdown">{feeDetails.details}</span></p>
-          <p>Payment Status: <span>{feeDetails.status}</span></p>
+          <p>
+            Name: <span>{feeDetails.name}</span>
+          </p>
+          <p>
+            Student ID: <span>{feeDetails.ID}</span>
+          </p>
+          <p>
+            Amount Due: <span>Rs. {feeDetails.amount}</span>{" "}
+          </p>
+          <p>
+            Fee Breakdown: <span id="fee-breakdown">{feeDetails.details}</span>
+          </p>
+          <p>
+            Payment Status: <span>{feeDetails.status}</span>
+          </p>
+        </div>
+        <div id="payment-div">
+          <div className="payment-button">Pay Now</div>
         </div>
       </div>
     </div>
