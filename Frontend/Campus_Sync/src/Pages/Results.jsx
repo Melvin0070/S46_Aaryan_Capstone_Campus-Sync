@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import "./Results.css";
 import Navbar from "../Components/navbar";
 import Hamburger from "../Components/hamburger";

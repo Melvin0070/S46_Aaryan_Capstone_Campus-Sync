@@ -5,6 +5,7 @@ import Home from './Pages/Home';
 import Results from './Pages/Results';
 import Fees from './Pages/Fees';
 import Helpdesk from './Pages/Helpdesk';
+import TopScore from './Pages/TopScore';
 
 function App() {
   return (
@@ -13,7 +14,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/results" element={<Results/>}></Route>
         <Route path="/fees" element={<Fees/>}></Route>
-        <Route path="/helpdesk" element={<Helpdesk/>}></Route>        
+        <Route path="/helpdesk" element={<Helpdesk/>}></Route>   
+        <Route path="/ranks" element={<TopScore/>}></Route>      
       </Routes>
     </Router>
   );

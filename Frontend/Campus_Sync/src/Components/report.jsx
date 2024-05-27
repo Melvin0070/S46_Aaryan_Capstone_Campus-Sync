@@ -15,7 +15,6 @@ function Report() {
       alert("Please fill in all mandatory fields (ID and Concern)");
       return;
     }
-
     const reportData = {
       ID: id,
       issue: concern,
@@ -41,8 +40,6 @@ function Report() {
   };
 
   const [reportData, setReportData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
@@ -50,11 +47,9 @@ function Report() {
       .get(import.meta.env.VITE_SERVER_URL + "/reports/details/ADMN2004")
       .then((response) => {
         setReportData(response.data);
-        setLoading(false);
       })
       .catch((error) => {
-        setError(error);
-        setLoading(false);
+        console.error(error);
       });
   }, []);
 
@@ -68,12 +63,8 @@ function Report() {
     );
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
+  if (!reportData) {
+    return <div className="loading-div">Loading...</div>;
   }
 
   const prevReport = reportData[currentIndex];

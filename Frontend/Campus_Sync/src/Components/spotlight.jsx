@@ -3,18 +3,21 @@ import "./spotlight.css";
 import topScore from "../assets/top-scorer.png";
 import communityCorner from "../assets/community-corner.png";
 import alumniIcon from "../assets/alumni-icon.png";
+import { Link } from "react-router-dom";
 
 function Spotlight() {
   return (
     <div>
       <div id="spot-heading">Spotlight</div>
       <div id="spot-divs">
-        <div className="spotlight-div">
-          <div className="spotlight-head">Top Scorers</div>
-          <div className="spotlight-img">
-            <img src={topScore} alt="topscorer" />
+        <Link to="/ranks" className="link-tag">
+          <div className="spotlight-div">
+            <div className="spotlight-head">Top Scorers</div>
+            <div className="spotlight-img">
+              <img src={topScore} alt="topscorer" />
+            </div>
           </div>
-        </div>
+        </Link>
         <div className="spotlight-div">
           <div className="spotlight-head">Alumni Icons</div>
           <div className="spotlight-img">

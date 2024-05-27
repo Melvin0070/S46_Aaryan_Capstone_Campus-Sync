@@ -8,3 +8,12 @@
     text-decoration: none;
     color: inherit;
 }
+
+.loading-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    font-size: 17px;
+    font-weight: 500;
+}

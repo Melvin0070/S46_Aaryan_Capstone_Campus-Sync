@@ -4,28 +4,20 @@ import axios from "axios";
 
 function Fee() {
   const [feeDetails, setFeeDetails] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     axios
       .get(import.meta.env.VITE_SERVER_URL + "/fees/details/ADMN2004")
       .then((response) => {
         setFeeDetails(response.data);
-        setLoading(false);
       })
       .catch((error) => {
-        setError(error);
-        setLoading(false);
+        console.error(error);
       });
   }, []);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
+  if (!feeDetails) {
+    return <div className="loading-div">Loading...</div>;
   }
 
   return (

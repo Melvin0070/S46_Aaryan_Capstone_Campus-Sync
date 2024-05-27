@@ -4,8 +4,6 @@ import "./result.css";
 
 function Result() {
   const [score, setScore] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
@@ -13,11 +11,9 @@ function Result() {
       .get(import.meta.env.VITE_SERVER_URL + "/scores/details/ADMN2004")
       .then((response) => {
         setScore(response.data);
-        setLoading(false);
       })
       .catch((error) => {
-        setError(error);
-        setLoading(false);
+        console.error(error);
       });
   }, []);
 
@@ -31,12 +27,12 @@ function Result() {
     );
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
+  if (!score) {
+    return (
+      <div className="loading-div">
+        Loading...
+      </div>
+    );
   }
 
   const detail = score.details[currentIndex];

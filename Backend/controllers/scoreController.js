@@ -21,6 +21,27 @@ export const getScoreData = async (req, res) => {
 
 
 
+//Get score details of all students
+export const getAllScores = async (req, res) => { 
+    try {
+        const scores = await Score.find(); // find() to get all scores from the database
+
+        // Check if no scores are found
+        if (scores.length === 0) { 
+            return res.status(404).json({ message: "No scores found" }); 
+        }
+
+        // If scores are found, return all scores data
+        return res.status(200).json(scores); 
+
+    } catch (error) {
+        console.error("Error fetching scores:", error);
+        return res.status(500).json({ message: "Internal server error" }); 
+    }
+};
+
+
+
 // Create a new score entry
 export const createScore = async (req, res) => {
     try {
