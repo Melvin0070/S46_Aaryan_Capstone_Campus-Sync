@@ -4,6 +4,7 @@
     width: 600px;
     background-color: #eaf7f4;
     border-radius: 6px;
+    border: 1px solid rgb(14, 84, 14);
 }
 
 #fee-heading {
@@ -25,7 +26,7 @@
 
 #fee-details p {
     margin: 5px 0;
-}
+}   
 
 #fee-details p span {
     font-weight: 500;
@@ -37,7 +38,7 @@
 
 .payment-button {
 
-    background-color: #309034;
+    background-color: #165e19;
     border: none; 
     color: white; 
     padding: 10px 20px; 
@@ -46,13 +47,14 @@
     margin: 4px 2px; 
     cursor: pointer; 
     border-radius: 6px; 
-    transition-duration: 0.4s; 
 }
 
 .payment-button:hover {
     background-color: white; 
-    color: #309034; 
-    box-shadow: 0 3px 4px 0 rgba(0,0,0,0.4), 0 4px 8px 0 rgba(0,0,0,0.4);
+    border: 2px solid #165e19;
+    color: #165e19; 
+    font-weight: 600;
+    box-shadow: 0 3px 4px 0 rgba(0,0,0,0.4), 0 2px 4px 0 rgba(0,0,0,0.4);
 }
 
 .payment-button:active {

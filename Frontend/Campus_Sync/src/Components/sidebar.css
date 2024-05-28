@@ -51,7 +51,7 @@
 #logout-div {
     background-color: #000080d1;
     color: white;
-    transition: all 0.75s ease;
+    transition: all 0.50s ease;
 }
 
 #logout-div:active {   

@@ -1,5 +1,5 @@
-import React from 'react'
-import './TopScore.css'
+import React from 'react';
+import './TopScore.css';
 import Navbar from '../Components/navbar';
 import Sidebar from '../Components/sidebar';
 import Hamburger from '../Components/hamburger';

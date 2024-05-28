@@ -24,12 +24,14 @@ function Spotlight() {
             <img src={alumniIcon} alt="alumniicon" />
           </div>
         </div>
-        <div className="spotlight-div">
-          <div className="spotlight-head">Comments Corner</div>
-          <div className="spotlight-img">
-            <img src={communityCorner} alt="commentscorner" />
+        <Link to="/community" className="link-tag">
+          <div className="spotlight-div">
+            <div className="spotlight-head">Comments Corner</div>
+            <div className="spotlight-img">
+              <img src={communityCorner} alt="commentscorner" />
+            </div>
           </div>
-        </div>
+        </Link>
       </div>
     </div>
   );

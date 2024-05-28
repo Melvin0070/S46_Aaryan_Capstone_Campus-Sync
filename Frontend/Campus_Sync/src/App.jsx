@@ -6,6 +6,7 @@ import Results from './Pages/Results';
 import Fees from './Pages/Fees';
 import Helpdesk from './Pages/Helpdesk';
 import TopScore from './Pages/TopScore';
+import Community from './Pages/Community';
 
 function App() {
   return (
@@ -15,7 +16,8 @@ function App() {
         <Route path="/results" element={<Results/>}></Route>
         <Route path="/fees" element={<Fees/>}></Route>
         <Route path="/helpdesk" element={<Helpdesk/>}></Route>   
-        <Route path="/ranks" element={<TopScore/>}></Route>      
+        <Route path="/ranks" element={<TopScore/>}></Route>  
+        <Route path="/community" element={<Community/>}></Route>     
       </Routes>
     </Router>
   );

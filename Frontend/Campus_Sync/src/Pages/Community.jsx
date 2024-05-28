@@ -1,12 +1,13 @@
 import React from 'react';
-import './Fees.css';
+import './Community.css';
 import Navbar from '../Components/navbar';
 import Sidebar from '../Components/sidebar';
 import Hamburger from '../Components/hamburger';
 import useSidebar from '../Components/toggleSidebar';
-import Fee from '../Components/fee';
+import Comments from '../Components/comments';
 
-function Fees() {
+
+function Community() {
     const { isSidebarVisible, toggleSidebar } = useSidebar();
  
     return (
@@ -15,12 +16,12 @@ function Fees() {
         <div id="sidebar-divs-container">
           {isSidebarVisible && <Sidebar/>}
           <div id="hamburger-result-container">
-            <Hamburger name="Fee Payment" toggleSidebar={toggleSidebar} />
-            <Fee/>
+            <Hamburger name="Community Corner" toggleSidebar={toggleSidebar} />
+            <Comments/>
           </div>
         </div>
       </>
     );
 }
 
-export default Fees;
+export default Community;

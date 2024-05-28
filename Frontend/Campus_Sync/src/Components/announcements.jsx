@@ -1,6 +1,6 @@
-import React from 'react'
-import './announcements.css'
-import rightArrow from '../assets/right-arrow-short.png'
+import React from 'react';
+import './announcements.css';
+import rightArrow from '../assets/right-arrow-short.png';
 
 function Announcements() {
   return (

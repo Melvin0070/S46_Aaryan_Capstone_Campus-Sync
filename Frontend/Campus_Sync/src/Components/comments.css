@@ -1,0 +1,129 @@
+.comment-section {
+    max-width: 850px;
+    margin: 40px auto;
+    padding: 25px;
+    background: linear-gradient(to bottom, white, #f3e8e0);
+    border-radius: 8px;
+    box-shadow: 0 6px 7px -5px rgba(0, 0, 0);
+}
+
+#total-comments {
+    font-size: 24px;
+    font-weight: 600;
+    color: rgb(11, 11, 11);
+}
+
+.comment-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.comment-sort-buttons button {
+    margin-left: 10px;
+    padding: 5px 10px;
+    border: none;
+    background-color: #e6e6e6;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.comment-sort-buttons button.active {
+    background-color: #bfbfbf;
+    font-weight: 500;
+}
+
+.comment-input form {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.comment-input input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #c7c7c7;
+    border-radius: 4px;
+    margin-right: 12px;
+    outline-color: rgb(175, 175, 175);
+    outline-width: 2px;
+}
+
+.comment-input button {
+    padding: 10px 15px;
+    border: none;
+    background-color: #006bdd;
+    color: white;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.comment-list .comment-div {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 10px 0;
+    border-bottom: 1px solid #d6d6d6;
+}
+
+.comment-list .comment-content {
+    flex-grow: 1;
+}
+
+.comment-list {
+    height: 300px;
+    overflow-y: auto;
+}
+
+.comment-list .commenter {
+    font-weight: 700;
+    font-size: 15px;
+    color: rgb(37, 37, 37);
+}
+
+.comments {
+    margin-top: 4px;
+    font-size: 17px;
+    color: rgb(41, 41, 41);
+    word-break: break-word;
+
+}
+
+.comment-list .comment-actions {
+    display: flex;
+    align-items: center;
+}
+
+.comment-list .like-button,
+.comment-list .delete-button {
+    margin-left: 10px;
+    padding: 5px 10px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 15px;
+    color: rgb(98, 98, 98);
+}
+
+
+.comment-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.comment-list::-webkit-scrollbar-button {
+
+    background-color: rgb(255, 255, 255);
+}
+
+.comment-list::-webkit-scrollbar-thumb {
+    background-color: #daba96;
+}
+
+.comment-list::-webkit-scrollbar-track {
+    background-color: #dac2b5;
+}
+
