@@ -121,7 +121,7 @@ function Comments() {
           <div key={comment._id} className="comment-div">
             <div className="comment-content">
               <span className="commenter">{comment.commenter}</span>
-              <p className="comments">{comment.comment}</p>
+              <p className="comments">{comment.comment} </p>
             </div>
             <div className="comment-actions">
               <button
