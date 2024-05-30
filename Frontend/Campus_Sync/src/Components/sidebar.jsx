@@ -36,12 +36,14 @@ function Sidebar() {
             </div>
           </div>
         </Link>
-        <div className="sidebar-buttons">
-          <div className="sidebar-img-p">
-            <img src={drops} alt="drops" />
-            <p>Drops</p>
+        <Link to="/drops" className="link-tag">
+          <div className="sidebar-buttons">
+            <div className="sidebar-img-p">
+              <img src={drops} alt="drops" />
+              <p>Drops</p>
+            </div>
           </div>
-        </div>
+        </Link>
         <Link to="/helpdesk" className="link-tag">
           <div className="sidebar-buttons">
             <div className="sidebar-img-p">
