@@ -1,12 +1,28 @@
 import mongoose from 'mongoose';
 
 const dropSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    type: { type: String, required: true }, // 'pdf', 'jpeg', 'png', 'jpg'
-    data: { type: Buffer },
-    path: { type: String }, 
+    topic: {
+        type: String,
+        required: true,
+    },
+    content: {
+        type: Buffer,
+        required: true,
+    },
+    uploadedBy: {
+        type: String,
+        required: true,
+    },
+    uploadedAt: {
+        type: Date,
+        default: Date.now,
+    },
+    contentType: {
+        type: String,
+        required: true,
+    },
 });
 
-const Drop = mongoose.model('drops', dropSchema);
+const Drop = mongoose.model('Drop', dropSchema);
 
 export default Drop;
