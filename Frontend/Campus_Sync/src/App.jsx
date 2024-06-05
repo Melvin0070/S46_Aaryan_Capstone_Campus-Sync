@@ -8,6 +8,7 @@ import Helpdesk from './Pages/Helpdesk';
 import TopScore from './Pages/TopScore';
 import Community from './Pages/Community';
 import Drops from './Pages/Drops';
+import AlumniIcons from './Pages/Alumni-Icons';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/ranks" element={<TopScore/>}></Route>  
         <Route path="/community" element={<Community/>}></Route>  
         <Route path="/drops" element={<Drops/>}></Route>    
+        <Route path="/alumni" element={<AlumniIcons/>}></Route>
       </Routes>
     </Router>
   );

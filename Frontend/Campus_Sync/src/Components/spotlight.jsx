@@ -18,12 +18,14 @@ function Spotlight() {
             </div>
           </div>
         </Link>
-        <div className="spotlight-div">
-          <div className="spotlight-head">Alumni Icons</div>
-          <div className="spotlight-img">
-            <img src={alumniIcon} alt="alumniicon" />
+        <Link to="/alumni" className="link-tag">
+          <div className="spotlight-div">
+            <div className="spotlight-head">Alumni Icons</div>
+            <div className="spotlight-img">
+              <img src={alumniIcon} alt="alumniicon" />
+            </div>
           </div>
-        </div>
+        </Link>
         <Link to="/community" className="link-tag">
           <div className="spotlight-div">
             <div className="spotlight-head">Comments Corner</div>

@@ -17,10 +17,14 @@ function Fee() {
       });
   }, []);
 
+
+  
   if (!feeDetails) {
     return <div className="loading-div">Loading...</div>;
   }
-
+  
+  const formattedAmount = feeDetails.amount.toLocaleString();
+  
   return (
     <div>
       <div id="fee-box">
@@ -33,7 +37,7 @@ function Fee() {
             <FaIdBadge /> Student ID: <span>{feeDetails.ID}</span>
           </p>
           <p>
-            <FaMoneyBillWave /> Amount Due: <span>Rs. {feeDetails.amount}</span>
+            <FaMoneyBillWave /> Amount Due: <span>Rs. {formattedAmount}</span>
           </p>
           <p id="fee-breakdown-p">
             <FaInfoCircle /> Fee Breakdown: <span id="fee-breakdown">{feeDetails.details}</span>

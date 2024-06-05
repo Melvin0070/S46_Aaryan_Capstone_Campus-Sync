@@ -10,7 +10,12 @@ function Result() {
     axios
       .get(import.meta.env.VITE_SERVER_URL + "/scores/details/ADMN2004")
       .then((response) => {
-        setScore(response.data);
+        // Reverse the details array before setting it in the state
+        const reversedScore = {
+          ...response.data,
+          details: response.data.details.reverse(),
+        };
+        setScore(reversedScore);
       })
       .catch((error) => {
         console.error(error);
