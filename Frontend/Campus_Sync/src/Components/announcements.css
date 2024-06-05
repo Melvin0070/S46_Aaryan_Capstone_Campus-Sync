@@ -18,8 +18,19 @@
     transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
+#announce-divs {
+    width: 70%;
+}
+
 .announcement-div:active {
     box-shadow: none;
+}
+
+#drop-container {
+    display: flex;
+    width: 100% !important;
+    justify-content: space-between;
+    padding: 0 10px;
 }
 
 .announcement-div p {
@@ -31,4 +42,12 @@
 .announcement-div img {
     height: 20px;
     margin: 0 15px;
+}
+
+.highlight-latest {
+    margin: 0 10px;
+    font-weight: 700;
+    font-size: 14px !important;
+    font-style: italic;
+    color: #016B90;
 }

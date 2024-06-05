@@ -1,6 +1,7 @@
 .comment-section {
     max-width: 850px;
-    margin: 40px auto;
+    margin: auto;
+    margin-top: 35px;
     padding: 25px;
     background: linear-gradient(to bottom, white, #f3e8e0);
     border-radius: 8px;
@@ -128,10 +129,10 @@
 }
 
 .comment-list::-webkit-scrollbar-thumb {
-    background-color: #daba96;
+    background-color: #c7a47b;
 }
 
 .comment-list::-webkit-scrollbar-track {
-    background-color: #dac2b5;
+    background-color: #e8d6c1;
 }
 

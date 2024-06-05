@@ -1,5 +1,6 @@
 .rank-scores-container {
-    margin: 40px auto;
+    margin: auto;
+    margin-top: 35px;
     text-align: center;
 }
 
@@ -22,7 +23,7 @@
 }
 
 #rank-reminder {
-    margin: 10px 0 50px 0;
+    margin: 10px 0 35px 0;
     font-weight: 600;
     color: rgb(86, 86, 86);
 }
