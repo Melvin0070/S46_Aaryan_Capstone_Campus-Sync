@@ -3,7 +3,7 @@ import "./fee.css";
 import axios from "axios";
 import { FaUserGraduate, FaIdBadge, FaMoneyBillWave, FaInfoCircle, FaCheckCircle } from "react-icons/fa";
 
-function Fee() {
+function Fee({ displayRazorpay }) {
   const [feeDetails, setFeeDetails] = useState(null);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ function Fee() {
   }
   
   const formattedAmount = feeDetails.amount.toLocaleString();
-  
+
   return (
     <div>
       <div id="fee-box">
@@ -47,7 +47,7 @@ function Fee() {
           </p>
         </div>
         <div id="payment-div">
-          <button className="payment-button">Pay Now</button>
+          <button onClick={displayRazorpay} className="payment-button">Pay Now</button>
         </div>
       </div>
     </div>
