@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import "./fee.css";
 import axios from "axios";
 import { FaUserGraduate, FaIdBadge, FaMoneyBillWave, FaInfoCircle, FaCheckCircle } from "react-icons/fa";
+import handlePayment from './razorpay'; 
 
-function Fee({ displayRazorpay }) {
+function Fee() {
   const [feeDetails, setFeeDetails] = useState(null);
 
   useEffect(() => {
@@ -17,13 +18,15 @@ function Fee({ displayRazorpay }) {
       });
   }, []);
 
-
-  
   if (!feeDetails) {
     return <div className="loading-div">Loading...</div>;
   }
-  
+
   const formattedAmount = feeDetails.amount.toLocaleString();
+
+  const handlePayNow = () => {
+    handlePayment(feeDetails.ID); // Call handlePayment function with feeDetails.ID
+  };
 
   return (
     <div>
@@ -47,7 +50,7 @@ function Fee({ displayRazorpay }) {
           </p>
         </div>
         <div id="payment-div">
-          <button onClick={displayRazorpay} className="payment-button">Pay Now</button>
+          <button onClick={handlePayNow} className="payment-button">Pay Now</button>
         </div>
       </div>
     </div>
