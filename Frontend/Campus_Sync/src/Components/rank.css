@@ -1,0 +1,151 @@
+.rank-scores-container {
+    margin: auto;
+    margin-top: 35px;
+    text-align: center;
+}
+
+.rank-title {
+    margin-top: 20px;
+    font-size: 40px;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 3px;
+    color: #0060c6;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.rank-form {
+    width: 80%;
+    display: flex;
+    justify-content: flex-end;
+    gap: 40px;
+    margin-top: 40px;
+}
+
+#rank-reminder {
+    margin: 10px 0 35px 0;
+    font-weight: 600;
+    color: rgb(86, 86, 86);
+}
+
+.rank-form-inputs {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.rank-form-inputs label {
+    margin-bottom: 3px;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.rank-form-inputs input {
+    padding: 5px;
+    border: 1px solid #181818;
+    background-color: #f7f7f7;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+#rank-form-button {
+    font-size: 18px;
+    padding: 0 10px;
+    font-weight: 500;
+    background-color: #0054ad;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#rank-form-button:hover {
+    background-color: #006de1;
+}
+
+#rank-results {
+    height: 250px;
+    width: 85%;
+    margin: 0 auto;
+    border-radius: 6px;
+    background-color: #f3e8e0;
+}
+
+#rank-results-title {
+    font-size: 26px;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1.5px;
+    padding: 25px;
+}
+
+.rank-leaderboard-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rank-leaderboard {
+    display: flex;
+    width: 83%;
+}
+
+.rank-student-card {
+    flex: 0 0 30%;
+    background-color: white;
+    border: 2px solid #4d4d4d;
+    border-radius: 8px;
+    padding: 15px 12px;
+    margin: 4px 13px;
+}
+
+.rank-rank {
+    font-size: 20px;
+    font-weight: 700;
+    color: #0054ad;
+    margin-bottom: 15px;
+}
+
+.rank-detail {
+    display: flex;
+    font-size: 16px;
+    margin-bottom: 5px;
+    color: rgb(37, 37, 37);
+    font-weight: 500;
+}
+
+.rank-detail span {
+    color: black;
+    font-weight: 600;
+}
+
+.rank-no-results {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #6a1313;
+}
+
+.scroll-button {
+    background-color: #0054ad;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    margin: 0 10px;
+    font-size: 22px;
+    cursor: pointer; 
+}
+
+.scroll-button:disabled {
+    background-color: #b7b7b7;
+    cursor: not-allowed;
+}
+
+.scroll-button.left {
+    border-radius: 10px 0 0 10px;
+}
+
+.scroll-button.right {
+    border-radius: 0 10px 10px 0;
+}

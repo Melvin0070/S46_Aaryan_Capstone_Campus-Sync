@@ -6,12 +6,17 @@ import reportRoutes from "./routes/reportRoutes.js";
 import feeRoutes from "./routes/feeRoutes.js";
 import commentRoutes from "./routes/commentRoutes.js";
 import alumniRoutes from "./routes/alumniRoutes.js";
+import dropRoutes from "./routes/dropRoutes.js"
+import razorpayRoutes from './routes/razorpayRoutes.js';
 import { connectToDB, isConnected } from "./database.js";
+import cors from 'cors';
 
 const app = express();
 const port = 1300;
 
 app.use(express.json());
+// app.use(express.urlencoded({extended: true}));
+app.use(cors());
 
 app.get('/status', (req, res) => {
     res.json({
@@ -32,3 +37,5 @@ app.use("/reports", reportRoutes);
 app.use("/fees", feeRoutes);
 app.use("/comments", commentRoutes);
 app.use("/alumnis", alumniRoutes);
+app.use("/drops", dropRoutes);
+app.use("/razorpay", razorpayRoutes);

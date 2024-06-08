@@ -1,0 +1,85 @@
+#result-container-blue {
+  margin: auto;
+  margin-top: 35px;
+  background-color: #eceef3;
+  height: 460px;
+  width: 950px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+#result-container-white {
+  height: 380px;
+  width: 740px;
+  background-color: rgb(255, 255, 255);
+  border-radius: 4px;
+  border: 2px solid rgb(219, 219, 219);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#exam-name {
+  margin: 35px 0 45px 0;
+  font-size: 27px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+#exam-details {
+  width: 90%;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+#exam-details div p {
+  margin: 8px;
+  font-size: 15px;
+}
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 25px;
+}
+
+.results-table th,
+.results-table td {
+  border: 1px solid #a8a8a8;
+  padding: 10px;
+  text-align: center;
+}
+
+.results-table th {
+  background-color: #f1f1f1;
+  font-weight: 600;
+}
+
+.results-table .sub-heading {
+  background-color: #d4d4d4;
+  font-weight: 700;
+}
+
+.navigation-buttons button {
+  background-color: #2565aa;
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  text-align: center;
+  font-size: 26px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.navigation-buttons button:hover {
+  background-color: #00458f;
+}
+
+.navigation-buttons button:disabled {
+  background-color: #b3b3cc;
+  cursor: not-allowed;
+}

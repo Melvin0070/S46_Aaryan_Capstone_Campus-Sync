@@ -1,0 +1,48 @@
+#hamburger-div {
+    background-color: #87AAD0;
+    height: 42px;
+    width: 52px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    transition: transform 0.3s ease-in-out, box-shadow 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+#hamburger-div img {
+    height: 22px;
+}
+
+#hamburger-container {
+    margin: 25px 20px 10px 45px;
+    display: flex;
+    align-items: flex-end;
+}
+
+#hamburger-selection-name {
+    font-size: 30px;
+    font-weight: 700;
+    margin-left: 16px;
+    line-height: 30px;
+}
+
+#hamburger-div:hover {
+    transform: scale(1.05);
+    box-shadow: 2px 2.5px 2.5px rgba(0, 0, 0, 0.6);
+}
+
+#hamburger-div:active {
+    box-shadow: none;
+}
+
+.custom-line {
+    height: 2px;
+    width: 95%;
+    background-color: #87AAD0;
+    margin: 0 auto;
+}
+
+#demo {
+    width: 75vw;
+}

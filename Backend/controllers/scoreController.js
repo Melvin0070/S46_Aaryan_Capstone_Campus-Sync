@@ -21,6 +21,27 @@ export const getScoreData = async (req, res) => {
 
 
 
+//Get score details of all students
+export const getAllScores = async (req, res) => { 
+    try {
+        const scores = await Score.find(); // find() to get all scores from the database
+
+        // Check if no scores are found
+        if (scores.length === 0) { 
+            return res.status(404).json({ message: "No scores found" }); 
+        }
+
+        // If scores are found, return all scores data
+        return res.status(200).json(scores); 
+
+    } catch (error) {
+        console.error("Error fetching scores:", error);
+        return res.status(500).json({ message: "Internal server error" }); 
+    }
+};
+
+
+
 // Create a new score entry
 export const createScore = async (req, res) => {
     try {
@@ -62,7 +83,7 @@ export const updateScore = async (req, res) => {
         const { ID, id } = req.params;
 
         // Extract updated score details from request body
-        const { details } = req.body;
+        const { name, details } = req.body;
         const { exam, scores, aggregateScore, subjects, date } = details[0];
 
         // Find the existing score entry by student ID and if score entry not found, return 404 Not Found
@@ -70,6 +91,10 @@ export const updateScore = async (req, res) => {
 
         if (!existingScore) {
             return res.status(404).json({ message: "Score entry not found" });
+        }
+
+        if (name) {
+            existingScore.name = name; //update the name
         }
 
         // Find the specific detail within the score entry by its _id and if detail not found, return 404 Not Found
