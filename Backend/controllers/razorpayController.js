@@ -48,45 +48,56 @@ export const createOrder = async (req, res) => {
 
 
 export const verifyPayment = async (req, res) => {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, feeId } = req.body;
+    try {
+        const { razorpay_order_id, razorpay_payment_id, razorpay_signature, feeId, amount, currency } = req.body;
+        console.log("Received payment verification request:", req.body);
 
-    const expectedSignature = crypto.createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
-        .update(razorpay_order_id + '|' + razorpay_payment_id)
-        .digest('hex');
+        // Validate that all required fields are present
+        if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !feeId || !amount || !currency) {
+            return res.status(400).json({ error: 'Missing required fields in request body' });
+        }
 
-    if (expectedSignature === razorpay_signature) {
-        console.log('Signature verification successful');
+        // Verify the signature
+        const expectedSignature = crypto.createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
+            .update(razorpay_order_id + "|" + razorpay_payment_id)
+            .digest('hex');
 
+        if (expectedSignature !== razorpay_signature) {
+            console.log('Signature verification failed');
+            return res.status(400).json({ error: 'Signature verification failed' });
+        }
+
+        // Save payment details to database
         const newPayment = new RazorpayModel({
             orderId: razorpay_order_id,
             paymentId: razorpay_payment_id,
             signature: razorpay_signature,
-            amount: req.body.amount,
-            currency: req.body.currency,
+            amount,
+            currency,
         });
 
-        try {
-            await newPayment.save();
+        await newPayment.save();
 
-            const fee = await Fee.findById(feeId);
-            if (fee) {
-                fee.status = 'Paid';
-                fee.razorpay = {
-                    orderId: razorpay_order_id,
-                    paymentId: razorpay_payment_id,
-                    signature: razorpay_signature,
-                };
-                await fee.save();
-                res.json({ status: 'success' });
-            } else {
-                res.status(404).json({ error: 'Fee record not found' });
-            }
-        } catch (error) {
-            console.error('Error saving payment details:', error);
-            res.status(500).send(error);
+        // Update fee status to "Paid"
+        const fee = await Fee.findOne({ ID: feeId });
+        if (!fee) {
+            return res.status(404).json({ error: 'Fee record not found' });
         }
-    } else {
-        console.log('Signature verification failed');
-        res.json({ status: 'failure' });
+
+        fee.status = 'Paid';
+        fee.razorpay = {
+            orderId: razorpay_order_id,
+            paymentId: razorpay_payment_id,
+            signature: razorpay_signature,
+        };
+
+        await fee.save();
+
+        // Send success response
+        console.log('Payment verification successful');
+        return res.json({ status: 'success' });
+    } catch (error) {
+        console.error('Error verifying payment:', error);
+        return res.status(500).json({ error: 'Internal Server Error' });
     }
 };

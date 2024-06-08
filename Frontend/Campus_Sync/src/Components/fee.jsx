@@ -6,27 +6,40 @@ import handlePayment from './razorpay';
 
 function Fee() {
   const [feeDetails, setFeeDetails] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    fetchFeeDetails(); // Fetch fee details when the component mounts
+  }, []);
+
+  const fetchFeeDetails = () => {
+    setLoading(true);
     axios
       .get(import.meta.env.VITE_SERVER_URL + "/fees/details/ADMN2004")
       .then((response) => {
         setFeeDetails(response.data);
+        setLoading(false); // Set loading to false when data is fetched
       })
       .catch((error) => {
         console.error(error);
+        setLoading(false); // Set loading to false even if there's an error
       });
-  }, []);
+  };
 
-  if (!feeDetails) {
-    return <div className="loading-div">Loading...</div>;
-  }
-
-  const formattedAmount = feeDetails.amount.toLocaleString();
+  const formattedAmount = feeDetails?.amount?.toLocaleString() || '';
 
   const handlePayNow = () => {
-    handlePayment(feeDetails.ID); // Call handlePayment function with feeDetails.ID
+    handlePayment(feeDetails.ID, (paymentSuccessful) => {
+        if (paymentSuccessful) {
+            // If payment was successful, fetch the fee details again
+            fetchFeeDetails();
+        }
+    });
   };
+
+  if (loading) {
+    return <div className="loading-div">Loading...</div>;
+  }
 
   return (
     <div>
