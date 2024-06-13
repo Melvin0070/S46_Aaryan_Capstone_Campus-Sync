@@ -12,7 +12,7 @@ function Sidebar() {
   return (
     <div id="sidebar">
       <div id="sidebar-buttons-div">
-        <Link to="/" className="link-tag">
+        <Link to="/home" className="link-tag">
           <div className="sidebar-buttons">
             <div className="sidebar-img-p">
               <img src={home} alt="home" />

@@ -7,7 +7,7 @@ function Navbar({ showDashboard }) {
   return (
     <div id="navbar">
       <div id="left-navbar-div">
-        <Link to="/">
+        <Link to="/home">
           <div>
             <img id="logo-img" src={logo} alt="website-logo" />
           </div>

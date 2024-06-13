@@ -1,13 +1,19 @@
 import React from "react";
-import demo from '../assets/Trial.jpg'
+import demo from "../assets/side-frame.jpg";
+import log from "../assets/login-logo.png";
 import "./Login.css";
 
 const LoginPage = () => {
   return (
     <div id="Login-Container">
+      <img id="login-logo" src={log} alt="" />
+
       <div className="Login-Wrapper">
         <div id="Side-Frame">
-            <img id="sideframe-img" src={demo} alt="" />
+          <img id="sideframe-img" src={demo} alt="" />
+          <div className="sideframe-label">
+            <p > # One Platform For All</p>
+          </div>
         </div>
         <div className="auth-wrapper">
           <div className="auth-main">
@@ -36,19 +42,9 @@ const LoginPage = () => {
             </div>
 
             <div className="auth-instructions">
-              <form>
-                <label htmlFor="auth-toggle" aria-hidden="true">
-                  Instructions
-                </label>
-                <input type="email" name="email" placeholder="Email" required />
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="Password"
-                  required
-                />
-                <button>Login</button>
-              </form>
+              <label htmlFor="auth-toggle" aria-hidden="true">
+                User Guide
+              </label>
             </div>
           </div>
         </div>

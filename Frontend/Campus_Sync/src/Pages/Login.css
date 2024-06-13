@@ -4,9 +4,17 @@
     align-items: center;
     min-height: 100vh;
     background:
-        linear-gradient(to left, rgba(213, 221, 255, 0.3) 50%, rgb(221, 227, 255) 95%),
+        linear-gradient(to left, rgba(229, 234, 255, 0.3) 50%, rgb(231, 235, 255) 95%),
         url('../assets/Login-BG.jpg');
     background-size: 100% 100%;
+}
+
+#login-logo {
+    border-radius: 5px;
+    height: 62px;
+    position: absolute;
+    top: 15px;
+    left: 25px;
 }
 
 .Login-Wrapper {
@@ -20,6 +28,7 @@
     margin: 25px 12.5px 25px 25px;
     width: 350px;
     height: 500px;
+    position: relative;
 }
 
 #sideframe-img {
@@ -28,8 +37,22 @@
     border-radius: 5px;
 }
 
+.sideframe-label {
+    width: 100%;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    font-size: 26px;
+    font-weight: 700;
+    align-items: center;
+    bottom: 35px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0);
+    color: rgb(255, 255, 255);
+    transform: skew(-20deg);
+}
+
 .auth-main {
-    background: linear-gradient(to bottom, #204688, #789ddf, #204688);
+    background: linear-gradient(to bottom, #c4d2ec, #09275a);
     margin: 25px 25px 25px 12.5px;
     width: 350px;
     height: 500px;
@@ -41,30 +64,44 @@
     display: none;
 }
 
-.auth-login-form,
-.auth-instructions {
+.auth-login-form {
     position: relative;
     width: 100%;
     height: 100%;
 }
 
+.auth-instructions {
+    position: relative;
+    width: 100%;
+    height: 200px;
+}
+
 .auth-login-form label,
 .auth-instructions label {
     color: #fff;
-    font-size: 2.3em;
+    font-size: 40px;
     justify-content: center;
     display: flex;
-    margin: 50px;
-    font-weight: bold;
+    font-weight: 700;
     cursor: pointer;
     transition: 0.5s ease-in-out;
 }
 
+.auth-login-form label {
+    margin: 40px;
+}
+
+.auth-instructions label {
+    margin: 40px;
+    padding-top: 30px;
+    text-decoration: underline;
+}
+
 .auth-login-form input,
 .auth-instructions input {
-    width: 60%;
-    height: 30px;
-    background: #f1f1f1;
+    width: 75%;
+    height: 35px;
+    background: #ffffff;
     justify-content: center;
     display: flex;
     margin: 20px auto;
@@ -76,14 +113,14 @@
 
 .auth-login-form button,
 .auth-instructions button {
-    width: 60%;
+    width: 75%;
     height: 40px;
     margin: 10px auto;
     justify-content: center;
     display: block;
     color: #fff;
-    background: #00153f;
-    font-size: 1em;
+    background: #021a49;
+    font-size: 17px;
     font-weight: bold;
     margin-top: 30px;
     outline: none;
@@ -95,14 +132,14 @@
 
 .auth-login-form button:hover,
 .auth-instructions button:hover {
-    background: #001a71;
+    background: #2e3962;
 }
 
 .auth-instructions {
     height: 460px;
-    background: #f9fcff;
+    background: #f4f6ff;
     border-radius: 60% / 10%;
-    transform: translateY(-180px);
+    transform: translateY(-200px);
     transition: 0.8s ease-in-out;
 }
 
@@ -112,13 +149,15 @@
 }
 
 #auth-toggle:checked~.auth-instructions {
-    transform: translateY(-500px);
+    transform: translateY(-470px);
 }
 
 #auth-toggle:checked~.auth-instructions label {
-    transform: scale(1);
+    transform: scale(0.8);
+    text-decoration: none;
 }
 
 #auth-toggle:checked~.auth-login-form label {
-    transform: scale(0.6);
+    transform: scale(0.7);
+    text-decoration: underline;
 }

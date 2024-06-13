@@ -137,14 +137,16 @@
 }
 
 #past-reports-white p {
+    font-weight: 600;
     margin: 5px 12px;
-    color: rgb(60, 60, 60);
+    color: rgb(0, 0, 0);
     line-height: 19px;
+    font-size: 15px;
 }
 
 #past-reports-white p span {
     font-weight: 500;
-    color: black;
+    color: rgb(58, 58, 58);
     font-style: normal;
 }
 
