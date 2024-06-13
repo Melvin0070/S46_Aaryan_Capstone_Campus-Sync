@@ -1,52 +1,60 @@
-import React, { useState } from 'react';
-// import { useHistory } from 'react-router-dom';
-import axios from 'axios';
-import './Login.css';
+import React from "react";
+import demo from '../assets/Trial.jpg'
+import "./Login.css";
 
-function Login() {
-  const [id, setId] = useState('');
-  const [name, setName] = useState('');
-  const [error, setError] = useState('');
-  // const history = useHistory();
-
-  const handleLogin = async () => {
-    try {
-      const response = await axios.post('/api/login', { id, name });
-      if (response.data.success) {
-        history.push('/home');
-      } else {
-        setError('Invalid ID or incorrect name');
-      }
-    } catch (error) {
-      setError('An error occurred. Please try again later.');
-    }
-  };
-
+const LoginPage = () => {
   return (
-    <div className="login-container">
-      <h1>Campus Management System</h1>
-      <p className="quote">"Education is the passport to the future, for tomorrow belongs to those who prepare for it today." - Malcolm X</p>
-      <div className="login-box">
-        <h2>Login</h2>
-        <div className="input-group">
-          <input
-            type="text"
-            placeholder="ID Number"
-            value={id}
-            onChange={(e) => setId(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <button onClick={handleLogin}>Login</button>
-          {error && <p className="error">{error}</p>}
+    <div id="Login-Container">
+      <div className="Login-Wrapper">
+        <div id="Side-Frame">
+            <img id="sideframe-img" src={demo} alt="" />
+        </div>
+        <div className="auth-wrapper">
+          <div className="auth-main">
+            <input type="checkbox" id="auth-toggle" aria-hidden="true" />
+
+            <div className="auth-login-form">
+              <form>
+                <label htmlFor="auth-toggle" aria-hidden="true">
+                  Login
+                </label>
+                <input
+                  type="text"
+                  name="username"
+                  placeholder="User name"
+                  required
+                />
+                <input type="email" name="email" placeholder="Email" required />
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  required
+                />
+                <button>Sign up</button>
+              </form>
+            </div>
+
+            <div className="auth-instructions">
+              <form>
+                <label htmlFor="auth-toggle" aria-hidden="true">
+                  Instructions
+                </label>
+                <input type="email" name="email" placeholder="Email" required />
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  required
+                />
+                <button>Login</button>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   );
-}
+};
 
-export default Login;
+export default LoginPage;
