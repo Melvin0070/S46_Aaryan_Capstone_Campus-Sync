@@ -63,7 +63,9 @@ function Fee() {
           </p>
         </div>
         <div id="payment-div">
-          <button onClick={handlePayNow} className="payment-button">Pay Now</button>
+        <button onClick={handlePayNow} className="payment-button" disabled={feeDetails.status === "Paid"}>
+            {feeDetails.status === "Paid" ? "Already Paid" : "Pay Now"}
+          </button>
         </div>
       </div>
     </div>

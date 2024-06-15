@@ -18,7 +18,7 @@
     font-size: 24px;
     margin-bottom: 20px;
     font-weight: 600;
-    text-transform: uppercase;  
+    text-transform: uppercase;
     letter-spacing: 1px;
 }
 
@@ -43,7 +43,8 @@
     font-weight: 600;
     color: #2b2b2b;
     margin-left: auto;
-    max-width: 62%; /* Allow space for text to flow nicely */
+    max-width: 62%;
+    /* Allow space for text to flow nicely */
     word-wrap: break-word;
     overflow-wrap: break-word;
     text-align: right;
@@ -65,8 +66,12 @@
     border-radius: 4px;
     cursor: pointer;
     transition: all 0.3s ease;
-    text-transform: uppercase;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.payment-button:disabled {
+    background-color: #5e77a9;
+    cursor: not-allowed;
 }
 
 .payment-button:hover {

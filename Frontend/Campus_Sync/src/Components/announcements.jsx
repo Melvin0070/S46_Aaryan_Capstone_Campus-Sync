@@ -35,7 +35,7 @@ function Announcements() {
           </div>
         ) : files.length > 0 ? (
           files.slice(0, 3).map((file, index) => (
-            <Link to="/drops" className="link-tag">
+            <Link to="/drops" className="link-tag" key={file._id}>
               <div key={index} className="announcement-div">
                 <div id="drop-container">
                   <p>

@@ -46,7 +46,7 @@
     font-weight: 700;
     align-items: center;
     bottom: 35px;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0);
+    text-shadow: 2px 3px 7px rgb(0, 0, 0);
     color: rgb(255, 255, 255);
     transform: skew(-20deg);
 }
@@ -97,8 +97,7 @@
     text-decoration: underline;
 }
 
-.auth-login-form input,
-.auth-instructions input {
+.auth-login-form input{
     width: 75%;
     height: 35px;
     background: #ffffff;
@@ -111,8 +110,7 @@
     border-radius: 5px;
 }
 
-.auth-login-form button,
-.auth-instructions button {
+.auth-login-form button{
     width: 75%;
     height: 40px;
     margin: 10px auto;
@@ -132,7 +130,7 @@
 
 .auth-login-form button:hover,
 .auth-instructions button:hover {
-    background: #2e3962;
+    background: #0a237c;
 }
 
 .auth-instructions {

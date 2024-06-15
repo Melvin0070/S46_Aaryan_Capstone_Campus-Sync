@@ -1,10 +1,10 @@
 import User from "../models/userSchema.js";
 
-// Get user details
-export const getUserData = async (req, res) => {
+// Login user
+export const loginUser = async (req, res) => {
     try {
-        const userId = req.params.id;
-        const user = await User.findOne({ _id: userId });
+        const ID = req.params.ID;
+        const user = await User.findOne({ ID: ID });
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });
@@ -44,36 +44,6 @@ export const createUser = async (req, res) => {
 
     } catch (error) {
         console.error("Error creating user:", error);
-        return res.status(500).json({ message: "Internal server error" });
-    }
-};
-
-
-
-// Login user
-export const loginUser = async (req, res) => {
-    try {
-        // Extract login credentials from request body
-        const { email, password } = req.body;
-
-        // Find user by email
-        const user = await User.findOne({ email });
-
-        // Check if user exists
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        // Check if password is correct
-        if (user.password !== password) {
-            return res.status(401).json({ message: "Incorrect password" });
-        }
-
-        // If user exists and password is correct, return success message
-        return res.status(200).json({ message: "Login successful" });
-
-    } catch (error) {
-        console.error("Error logging in:", error);
         return res.status(500).json({ message: "Internal server error" });
     }
 };

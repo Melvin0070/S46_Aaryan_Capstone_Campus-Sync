@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema({
     ID: { type: String, required: true},
     email: { type: String, required: true },
     password: { type: String, required: true },
-    verified: { type: Boolean, default: true }    //For Testing purposes this value is set to true
+    verified: { type: Boolean, default: false }    //For Testing purposes this value can be set to true
 });
 
 
