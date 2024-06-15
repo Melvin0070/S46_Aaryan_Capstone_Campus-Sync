@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import { getCookie } from "./cookies.jsx";
 import "./drop.css";
 
 function Drop() {
@@ -13,6 +14,9 @@ function Drop() {
   const fileInputRef = useRef(null);
 
   useEffect(() => {
+    const usernameFromCookies = getCookie("username");
+    setUsername(usernameFromCookies || "");
+
     fetchFiles();
   }, []);
 
@@ -57,7 +61,7 @@ function Drop() {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-      setUploadStatus(response.data.message);
+      console.log("File Uploaded Successfully");
       setSelectedFile(null);
       setTopic("");
       fetchFiles();
@@ -108,13 +112,6 @@ function Drop() {
           <div className="upload-section">
             <h4>Drop a Notice</h4>
             <p className="warning">(Do not post any inappropriate content)</p>
-            <input
-              type="text"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="drop-username-input"
-            />
             <form onSubmit={handleUpload} className="drop-form">
               <input
                 type="text"
@@ -146,7 +143,7 @@ function Drop() {
             ) : files.length > 0 ? (
               <>
                 <button
-                  className= "carousel-button"
+                  className="carousel-button"
                   onClick={handlePrev}
                   disabled={currentIndex === 0}
                 >
@@ -193,7 +190,7 @@ function Drop() {
                   )}
                 </div>
                 <button
-                  className= "carousel-button"
+                  className="carousel-button"
                   onClick={handleNext}
                   disabled={currentIndex === files.length - 1}
                 >

@@ -1,11 +1,35 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./report.css";
+import { getCookie } from './cookies.jsx'; 
 
 function Report() {
   const [id, setId] = useState("");
   const [concern, setConcern] = useState("");
   const [proposal, setProposal] = useState("");
+  const [reportData, setReportData] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const userID = getCookie("userID"); // Get the userID from cookies
+
+  useEffect(() => {
+    fetchReportDetails();
+  }, [userID]);
+
+  const fetchReportDetails = () => {
+    if (!userID) {
+      console.error("User ID is not available in cookies");
+      return;
+    }
+
+    axios
+      .get(import.meta.env.VITE_SERVER_URL + `/reports/details/${userID}`)
+      .then((response) => {
+        setReportData(response.data.reverse());
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission behavior and reloading the entire page
@@ -15,8 +39,9 @@ function Report() {
       alert("Please fill in all mandatory fields (ID and Concern)");
       return;
     }
+    
     const reportData = {
-      ID: id,
+      ID: id, 
       issue: concern,
       proposal,
     };
@@ -30,6 +55,10 @@ function Report() {
 
       if (response.status === 201) {
         alert("Report created successfully");
+        fetchReportDetails(); // Fetch the updated report details
+        setId(""); // Reset ID input field
+        setConcern(""); // Reset concern input field
+        setProposal(""); // Reset proposal input field
       } else {
         alert(`Error: ${response.data.message}`);
       }
@@ -38,20 +67,6 @@ function Report() {
       alert("Internal server error");
     }
   };
-
-  const [reportData, setReportData] = useState(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  useEffect(() => {
-    axios
-      .get(import.meta.env.VITE_SERVER_URL + "/reports/details/ADMN2004")
-      .then((response) => {
-        setReportData(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
 
   const handlePrevClick = () => {
     setCurrentIndex((prevIndex) => Math.max(0, prevIndex - 1));

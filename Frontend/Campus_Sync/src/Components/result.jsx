@@ -1,14 +1,25 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./result.css";
+import { getCookie } from './cookies'; 
 
 function Result() {
   const [score, setScore] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const userID = getCookie("userID"); // Get the userID from cookies
 
   useEffect(() => {
+    fetchScoreDetails();
+  }, [userID]);
+
+  const fetchScoreDetails = () => {
+    if (!userID) {
+      console.error("User ID is not available in cookies");
+      return;
+    }
+
     axios
-      .get(import.meta.env.VITE_SERVER_URL + "/scores/details/ADMN2004")
+      .get(import.meta.env.VITE_SERVER_URL + `/scores/details/${userID}`)
       .then((response) => {
         // Reverse the details array before setting it in the state
         const reversedScore = {
@@ -20,7 +31,7 @@ function Result() {
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+  };
 
   const handlePrevClick = () => {
     setCurrentIndex((prevIndex) => Math.max(0, prevIndex - 1));

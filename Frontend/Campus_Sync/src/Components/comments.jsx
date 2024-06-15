@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaThumbsUp, FaTrash } from 'react-icons/fa';
 import Modal from './modal';
+import { getCookie } from "./cookies.jsx"; 
 import "./comments.css";
 
 function Comments() {
   const [comments, setComments] = useState([]);
-  const [commenter, setCommenter] = useState("Cookies.name"); //set the cokkies.name
+  const [commenter, setCommenter] = useState(""); 
   const [comment, setComment] = useState("");
   const [sortType, setSortType] = useState("new");
   const [totalComments, setTotalComments] = useState(0);
@@ -15,6 +16,9 @@ function Comments() {
   const [confirmAction, setConfirmAction] = useState(null);
 
   useEffect(() => {
+    const username = getCookie("username"); // Get the username from cookies
+    setCommenter(username || ""); // Set the commenter state with the username
+
     fetchComments();
   }, [sortType]);
 
@@ -37,7 +41,7 @@ function Comments() {
     } else {
       return comments.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-      );
+      ).reverse();
     }
   };
 
@@ -45,7 +49,6 @@ function Comments() {
     e.preventDefault();
     try {
       await axios.post(import.meta.env.VITE_SERVER_URL +"/comments/create", { commenter, comment });
-      setCommenter("Cookies.name");  //once use cookies name then make this empty string again
       setComment("");
       fetchComments();
     } catch (error) {
@@ -54,14 +57,16 @@ function Comments() {
   };
 
   const handleLike = async (id) => {
+    const username = getCookie("username"); // Get the username from cookies
+
     try {
       const comment = comments.find(comment => comment._id === id);
-      if (comment && comment.hasLiked) {
+      if (comment && comment.likedBy.includes(username)) {
         setModalMessage("You have already liked this comment.");
-        setConfirmAction(null);
+        setConfirmAction(null); // No confirm action needed
         setModalOpen(true);
       } else {
-        await axios.put(import.meta.env.VITE_SERVER_URL + `/comments/update/${id}`);
+        await axios.put(import.meta.env.VITE_SERVER_URL + `/comments/update/${id}`, { username });
         fetchComments();
       }
     } catch (error) {
@@ -147,7 +152,7 @@ function Comments() {
         onClose={() => setModalOpen(false)}
         onConfirm={confirmAction}
         message={modalMessage}
-        confirmButtonText="Delete"
+        confirmButtonText={confirmAction ? "Delete" : "OK"}
         showCancelButton={!!confirmAction}
       />
     </div>

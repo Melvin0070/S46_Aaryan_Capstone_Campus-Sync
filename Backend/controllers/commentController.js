@@ -46,16 +46,27 @@ export const createComment = async (req, res) => {
 // Update Likes of a comment
 export async function updateLikes(req, res) {
     try {
-        // Find the comment by its ID  and if not found, return 404 Not Found
-        const comment = await Comment.findById(req.params.id);        
-        
+        const username = req.body.username; // Assume the username is passed in the request body
+
+        // Find the comment by its ID and if not found, return 404 Not Found
+        const comment = await Comment.findById(req.params.id);
+
         if (!comment) {
             return res.status(404).json({ message: 'Comment not found' });
         }
 
-        // Increment the likes count for the comment and save the updated comment
+        // Check if the user has already liked the comment
+        if (comment.likedBy.includes(username)) {
+            return res.status(200).json({ message: 'User has already liked this comment' });
+        }
+
+        // Increment the likes count for the comment
         comment.likes = comment.likes + 1;
-        
+
+        // Add the username to the likedBy array
+        comment.likedBy.push(username);
+
+        // Save the updated comment
         const updatedComment = await comment.save();
 
         // Return the updated comment
@@ -66,6 +77,9 @@ export async function updateLikes(req, res) {
         return res.status(400).json({ message: error.message });
     }
 }
+
+
+
 
 
 

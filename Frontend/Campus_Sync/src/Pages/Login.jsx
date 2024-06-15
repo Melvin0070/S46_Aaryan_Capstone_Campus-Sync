@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { setCookie } from "../Components/cookies.jsx"; 
 import sideframe from "../assets/side-frame.jpg";
 import loginLogo from "../assets/login-logo.png";
 import "./Login.css";
@@ -21,6 +22,12 @@ const LoginPage = () => {
       );
       console.log(response);
       if (response.data) {
+
+        // Store user details in cookies 
+        setCookie("username", username, 1);
+        setCookie("email", email, 1);
+        setCookie("userID", password, 1);
+
         navigate("/home");
         console.log("User exists, proceed with login");
       } else {
@@ -28,6 +35,7 @@ const LoginPage = () => {
       }
     } catch (error) {
       console.error(error);
+    } finally {
       setLoading(false);
     }
   };

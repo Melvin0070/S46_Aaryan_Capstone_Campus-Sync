@@ -69,11 +69,6 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.payment-button:disabled {
-    background-color: #5e77a9;
-    cursor: not-allowed;
-}
-
 .payment-button:hover {
     box-shadow: 0 3px 5px rgba(0, 0, 0, 0.7);
     transform: translateY(-2px);
@@ -87,11 +82,32 @@
 
 #payment-div {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
     padding: 20px 60px;
     background-color: #e7e7e7;
     border-radius: 0 0 10px 10px;
     border-top: 1px solid #bebebe;
+}
+
+.test-card-details a {
+    word-spacing: 1px;
+    font-size: 15px;
+    color: #007bff;
+    text-decoration: none;
+    padding: 7px 14px;
+    background-color: #f8f9fa;
+    border: 1px solid #007bff;
+    border-radius: 4px;
+}
+
+.test-card-details a:hover {
+    color: #0056b3;
+}
+
+.test-card-details a.btn {
+    cursor: pointer;
+    margin-right: 10px;
 }
 
 .loading-div {
