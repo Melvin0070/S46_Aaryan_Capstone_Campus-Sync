@@ -2,24 +2,42 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./result.css";
 import { getCookie } from './cookies'; 
+import { jwtDecode } from "jwt-decode";
 
 function Result() {
   const [score, setScore] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const userID = getCookie("userID"); // Get the userID from cookies
+
+  // Retrieve the JWT token from cookies or local storage
+  const token = getCookie("token"); 
+  let userID = null;
+
+  if (token) {
+    try {
+      // Decode the token to get the user ID
+      const decodedToken = jwtDecode(token); 
+      userID = decodedToken.ID;
+    } catch (error) {
+      console.error("Invalid token", error);
+    }
+  }
 
   useEffect(() => {
     fetchScoreDetails();
-  }, [userID]);
+  }, [token]);  // Fetch rewsult details whenever token changes
 
   const fetchScoreDetails = () => {
     if (!userID) {
-      console.error("User ID is not available in cookies");
+      console.error("User ID is not available in the token");
       return;
     }
 
     axios
-      .get(import.meta.env.VITE_SERVER_URL + `/scores/details/${userID}`)
+      .get(import.meta.env.VITE_SERVER_URL + `/scores/details/${userID}`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the headers
+        },
+      })
       .then((response) => {
         // Reverse the details array before setting it in the state
         const reversedScore = {

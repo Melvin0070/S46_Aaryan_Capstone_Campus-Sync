@@ -114,12 +114,8 @@
     transform: rotate(+90deg);
 }
 
-.report-controll-buttons button:hover {
-    background-color: #005979;
-}
-
 .report-controll-buttons button:disabled {
-    background-color: #b3b3cc;
+    background-color: #689bad;
     cursor: not-allowed;
 }
 

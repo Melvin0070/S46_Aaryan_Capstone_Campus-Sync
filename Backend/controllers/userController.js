@@ -1,75 +1,59 @@
-import User from "../models/userSchema.js";
+import User from '../models/userSchema.js';
+import { generateToken, generateRefreshToken, removeRefreshToken } from './jwtMiddleware.js';
+import jwt from 'jsonwebtoken';
 
-// Login user
+// Login user and generate tokens
 export const loginUser = async (req, res) => {
-    try {
-        const ID = req.params.ID;
-        const user = await User.findOne({ ID: ID });
+  try {
+    const { ID } = req.body;
+    const user = await User.findOne({ ID });
 
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        // If user is found, return the user data
-        return res.status(200).json(user);
-
-    } catch (error) {
-        console.error("Error fetching user:", error);
-        return res.status(500).json({ message: "Internal server error" });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
+
+    const accessToken = generateToken({ ID: user.ID });
+    const refreshToken = generateRefreshToken({ ID: user.ID });
+
+    return res.status(200).json({ user, accessToken, refreshToken });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error", error: error.message });
+  }
+};
+
+// Refresh access token using refresh token
+export const refreshToken = (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+      return res.status(403).json({ message: 'No refresh token provided' });
+    }
+
+    jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, decoded) => {
+      if (err) {
+        return res.status(403).json({ message: 'Invalid refresh token' });
+      }
+
+      const accessToken = generateToken({ ID: decoded.ID });
+      res.json({ accessToken });
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error", error: error.message });
+  }
 };
 
 
-
-// Create a new user(Signup)
-export const createUser = async (req, res) => {
-    try {
-        // Extract user data from request body
-        const { username, ID, email, password } = req.body;
-
-        // Check if user with the same ID already exists
-        const existingUser = await User.findOne({ ID });
-
-        if (existingUser) {
-            return res.status(400).json({ message: "User with the same ID already exists" });
-        }
-
-        // Create a new user instance
-        const newUser = new User({ username, ID, email, password });
-
-        // Save the new user to the database and return success message with status code 201
-        await newUser.save();
-        
-        return res.status(201).json({ message: "User created successfully" });
-
-    } catch (error) {
-        console.error("Error creating user:", error);
-        return res.status(500).json({ message: "Internal server error" });
+// Logout user and remove refresh token
+export const logout = (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+    if (!refreshToken) {
+      return res.status(400).json({ message: 'No refresh token provided' });
     }
-};
-
-
-
-// Delete an existing user
-export const deleteUser = async (req, res) => {
-    try {
-        // Extract user ID from request parameters
-        const userId = req.params.id;
-
-        // Find the user by ID and if user does not exist, return 404 Not Found
-        const user = await User.findOne({ _id: userId });
-        
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        // Delete the user from the database and return success message
-        await User.deleteOne({ _id: userId });
-        
-        return res.status(200).json({ message: "User deleted successfully" });
-
-    } catch (error) {
-        console.error("Error deleting user:", error);
-        return res.status(500).json({ message: "Internal server error" });
-    }
+    removeRefreshToken(refreshToken);
+    res.sendStatus(204);
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error", error: error.message });
+  }
 };

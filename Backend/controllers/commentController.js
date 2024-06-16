@@ -46,7 +46,7 @@ export const createComment = async (req, res) => {
 // Update Likes of a comment
 export async function updateLikes(req, res) {
     try {
-        const username = req.body.username; // Assume the username is passed in the request body
+        const username = req.body.username; // Extract username from request body
 
         // Find the comment by its ID and if not found, return 404 Not Found
         const comment = await Comment.findById(req.params.id);

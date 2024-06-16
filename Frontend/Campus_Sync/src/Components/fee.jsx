@@ -10,34 +10,57 @@ import {
 } from "react-icons/fa";
 import handlePayment from "./razorpay";
 import { getCookie } from "./cookies.jsx";
+import {jwtDecode} from "jwt-decode"; 
 
 function Fee() {
   const [feeDetails, setFeeDetails] = useState(null);
   const [loading, setLoading] = useState(true);
-  const userID = getCookie("userID"); // Get the userID from cookies
+  const token = getCookie("token"); // Retrieve JWT token from cookies
+
+  // Function to decode JWT token and extract user ID
+  const getUserIdFromToken = () => {
+    try {
+      if (token) {
+        const decodedToken = jwtDecode(token);
+        return decodedToken.ID;
+      } else {
+        console.error("Token not found in cookies");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error decoding token:", error);
+      return null;
+    }
+  };
 
   useEffect(() => {
-    fetchFeeDetails(); // Fetch fee details when the component mounts
-  }, [userID]);
+    fetchFeeDetails(); // Fetch fee details when the component mounts or token changes
+  }, [token]);
 
-  const fetchFeeDetails = () => {
+  const fetchFeeDetails = async () => {
+    const userID = getUserIdFromToken(); // Get user ID from decoded token
     if (!userID) {
-      console.error("User ID is not available in cookies");
+      console.error("User ID not found in token");
       setLoading(false);
       return;
     }
 
-    setLoading(true);
-    axios
-      .get(import.meta.env.VITE_SERVER_URL + `/fees/details/${userID}`)
-      .then((response) => {
-        setFeeDetails(response.data);
-        setLoading(false); // Set loading to false when data is fetched
-      })
-      .catch((error) => {
-        console.error(error);
-        setLoading(false); // Set loading to false even if there's an error
-      });
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        `${import.meta.env.VITE_SERVER_URL}/fees/details/${userID}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the headers
+          },
+        }
+      );
+      setFeeDetails(response.data);
+      setLoading(false); // Set loading to false when data is fetched
+    } catch (error) {
+      console.error("Error fetching fee details:", error);
+      setLoading(false); // Set loading to false even if there's an error
+    }
   };
 
   const formattedAmount = feeDetails?.amount?.toLocaleString() || "";

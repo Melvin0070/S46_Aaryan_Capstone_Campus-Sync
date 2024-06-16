@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./report.css";
-import { getCookie } from './cookies.jsx'; 
+import { getCookie } from './cookies'; 
+import { jwtDecode } from "jwt-decode";
 
 function Report() {
   const [id, setId] = useState("");
@@ -9,56 +10,73 @@ function Report() {
   const [proposal, setProposal] = useState("");
   const [reportData, setReportData] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const userID = getCookie("userID"); // Get the userID from cookies
+  const token = getCookie("token"); // Retrieve token from cookies
 
   useEffect(() => {
     fetchReportDetails();
-  }, [userID]);
+  }, [token]); // Fetch report details whenever token changes
 
   const fetchReportDetails = () => {
-    if (!userID) {
-      console.error("User ID is not available in cookies");
+    if (!token) {
+      console.error("Token not found in cookies");
       return;
     }
 
-    axios
-      .get(import.meta.env.VITE_SERVER_URL + `/reports/details/${userID}`)
-      .then((response) => {
-        setReportData(response.data.reverse());
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    try {
+      const decodedToken = jwtDecode(token); // Decode token to get user ID
+      const userID = decodedToken.ID;
+
+      axios
+        .get(import.meta.env.VITE_SERVER_URL + `/reports/details/${userID}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          setReportData(response.data.reverse());
+        })
+        .catch((error) => {
+          console.error("Error fetching reports:", error);
+        });
+    } catch (error) {
+      console.error("Error decoding token:", error);
+    }
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission behavior and reloading the entire page
+    e.preventDefault();
 
-    // Check if ID and Concern are not empty
-    if (!id.trim() || !concern.trim()) {
-      alert("Please fill in all mandatory fields (ID and Concern)");
+    if (!token) {
+      console.error("Token not found in cookies");
       return;
     }
-    
-    const reportData = {
-      ID: id, 
-      issue: concern,
-      proposal,
-    };
 
     try {
-      // Making a POST request
+      const decodedToken = jwtDecode(token); // Decode token to get user ID
+      const userID = decodedToken.ID;
+
+      const reportData = {
+        ID: id,
+        issue: concern,
+        proposal,
+      };
+
       const response = await axios.post(
         import.meta.env.VITE_SERVER_URL + "/reports/create",
-        reportData
+        reportData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       if (response.status === 201) {
         alert("Report created successfully");
-        fetchReportDetails(); // Fetch the updated report details
-        setId(""); // Reset ID input field
-        setConcern(""); // Reset concern input field
-        setProposal(""); // Reset proposal input field
+        fetchReportDetails();
+        setId("");
+        setConcern("");
+        setProposal("");
       } else {
         alert(`Error: ${response.data.message}`);
       }

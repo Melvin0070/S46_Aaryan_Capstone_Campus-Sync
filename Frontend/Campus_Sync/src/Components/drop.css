@@ -173,8 +173,8 @@
 
 .drop-delete-button {
     position: absolute;
-    bottom: 23px;
-    right: 80px;
+    bottom: 20px;
+    right: 35px;
     background-color: #dc3545;
     color: white;
     border: none;
