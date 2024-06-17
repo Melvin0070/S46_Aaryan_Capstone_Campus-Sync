@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import "./announcements.css";
 import rightArrow from "../assets/right-arrow-short.png";
 import { Link } from "react-router-dom";
 import { getCookie, setCookie } from "./cookies.jsx";
+import axiosInstance from "./axiosInstance.js"; // Import axiosInstance
 
 function Announcements() {
   const [files, setFiles] = useState([]);
@@ -17,20 +17,16 @@ function Announcements() {
     } else if (refreshToken) {
       refreshAccessTokenAndFetchFiles();
     }
-  }, [accessToken]);
+  }, [accessToken]); // Trigger useEffect when accessToken changes
 
   const fetchFiles = async (token) => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_SERVER_URL}/drops/files`,
-        {
-          headers: {
-            Authorization: token,
-            RefreshToken: refreshToken,
-          },
-        }
-      );
+      const response = await axiosInstance.get("/drops/files", {
+        headers: {
+          Authorization: token,
+        },
+      });
       setFiles(Array.isArray(response.data) ? response.data.reverse() : []);
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -44,10 +40,7 @@ function Announcements() {
 
   const refreshAccessTokenAndFetchFiles = async () => {
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_SERVER_URL}/users/token`,
-        { refreshToken }
-      );
+      const response = await axiosInstance.post("/users/token", { refreshToken });
       if (response.data && response.data.accessToken) {
         const newAccessToken = response.data.accessToken;
         setCookie("accessToken", newAccessToken, 1); // Update access token in cookies

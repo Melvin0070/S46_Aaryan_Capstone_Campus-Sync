@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { setCookie, getCookie, removeCookie } from "../Components/cookies";
+import { setCookie } from "../Components/cookies";
 import sideframe from "../assets/side-frame.jpg";
 import loginLogo from "../assets/login-logo.png";
-import './Login.css'
+import './Login.css';
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
@@ -28,7 +28,6 @@ const LoginPage = () => {
         setCookie("refreshToken", response.data.refreshToken, 7); // 7 days
 
         navigate("/home");
-        console.log("User exists, proceed with login");
       } else {
         console.log("ID number does not match any existing user.");
       }
@@ -38,32 +37,6 @@ const LoginPage = () => {
       setLoading(false);
     }
   };
-
-  const refreshToken = async () => {
-    try {
-      const refreshToken = getCookie("refreshToken");
-      if (!refreshToken) return;
-      const response = await axios.post(
-        `${import.meta.env.VITE_SERVER_URL}/users/token`,
-        { refreshToken }
-      );
-      if (response.data) {
-        setCookie("accessToken", response.data.accessToken, 1); // 1 day
-      } else {
-        console.error("Failed to refresh token");
-      }
-    } catch (error) {
-      console.error("Error refreshing token:", error);
-    }
-  };
-
-  useEffect(() => {
-    const refreshTokenInterval = setInterval(() => {
-      refreshToken();
-    }, 8 * 1000); // Refresh token every 8 seconds (as access token expires in 10s)
-
-    return () => clearInterval(refreshTokenInterval);
-  }, []);
 
   return (
     <div id="Login-Container">

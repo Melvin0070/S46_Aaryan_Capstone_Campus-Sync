@@ -1,74 +1,105 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { FaThumbsUp, FaTrash } from "react-icons/fa";
-import Modal from "./modal";
-import { getCookie } from "./cookies.jsx";
-import "./comments.css";
+import React, { useState, useEffect } from 'react';
+import axiosInstance from './axiosInstance';
+import { FaThumbsUp, FaTrash } from 'react-icons/fa';
+import Modal from './modal';
+import { getCookie, setCookie } from './cookies.jsx';
+import './comments.css';
 
 function Comments() {
   const [comments, setComments] = useState([]);
-  const [commenter, setCommenter] = useState("");
-  const [comment, setComment] = useState("");
-  const [sortType, setSortType] = useState("new");
+  const [commenter, setCommenter] = useState('');
+  const [comment, setComment] = useState('');
+  const [sortType, setSortType] = useState('new');
   const [totalComments, setTotalComments] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
+  const [modalMessage, setModalMessage] = useState('');
   const [confirmAction, setConfirmAction] = useState(null);
-  const token = getCookie("token"); // Retrieve JWT token from cookies
-  const username = getCookie("username"); // Retrieve username from cookies
+  const [accessToken, setAccessToken] = useState(getCookie('accessToken'));
+  const refreshToken = getCookie('refreshToken');
+  const username = getCookie('username');
 
   useEffect(() => {
     if (username) {
-      setCommenter(username); // Set the commenter state with the username from cookies
+      setCommenter(username);
     }
 
-    fetchComments();
-  }, [sortType, username, token]); // Get the comments whenever the sortType, username, token changes
+    if (accessToken) {
+      fetchComments(accessToken);
+    } else if (refreshToken) {
+      refreshAccessTokenAndFetchComments();
+    }
+  }, [sortType, username, accessToken]);
 
-  const fetchComments = async () => {
+  const fetchComments = async (token) => {
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_SERVER_URL}/comments/details`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Include JWT token in headers
-          },
-        }
-      );
+      const response = await axiosInstance.get('/comments/details', {
+        headers: {
+          Authorization: token,
+          RefreshToken: refreshToken,
+        },
+      });
       const sortedComments = sortComments(response.data);
       setComments(sortedComments);
       setTotalComments(response.data.length);
     } catch (error) {
-      console.error("Error fetching comments:", error);
+      handleTokenRefreshError(error);
     }
   };
 
+  const refreshAccessTokenAndFetchComments = async () => {
+    try {
+      const response = await axiosInstance.post('/users/token', { refreshToken });
+      if (response.data && response.data.accessToken) {
+        const newAccessToken = response.data.accessToken;
+        setCookie('accessToken', newAccessToken, 1);
+        setAccessToken(newAccessToken); // Update the accessToken state
+        fetchComments(newAccessToken);
+      } else {
+        console.error('Failed to refresh token');
+        handleTokenRefreshFailure();
+      }
+    } catch (error) {
+      handleTokenRefreshError(error);
+    }
+  };
+
+  const handleTokenRefreshError = (error) => {
+    if (error.response && error.response.status === 401) {
+      refreshAccessTokenAndFetchComments();
+    } else {
+      console.error('Error fetching comments:', error);
+      // Handle other errors as needed
+    }
+  };
+
+  const handleTokenRefreshFailure = () => {
+    // Handle refresh token failure (e.g., logout or display error message)
+    console.error('Failed to refresh token');
+    // Optionally, perform logout or display an error message
+  };
+
   const sortComments = (comments) => {
-    if (sortType === "top") {
+    if (sortType === 'top') {
       return comments.sort((a, b) => b.likes - a.likes);
     } else {
-      return comments
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        .reverse();
+      return comments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).reverse();
     }
   };
 
   const handleCreateComment = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(
-        `${import.meta.env.VITE_SERVER_URL}/comments/create`,
-        { commenter, comment },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setComment("");
-      fetchComments();
+      await axiosInstance.post('/comments/create', { commenter, comment }, {
+        headers: {
+          Authorization: accessToken,
+          RefreshToken: refreshToken,
+        },
+      });
+      setComment('');
+      fetchComments(accessToken);
     } catch (error) {
-      console.error("Error creating comment:", error);
+      console.error('Error creating comment:', error);
+      // Handle error (e.g., show a message to the user)
     }
   };
 
@@ -76,47 +107,54 @@ function Comments() {
     try {
       const comment = comments.find((comment) => comment._id === id);
       if (comment && comment.likedBy.includes(commenter)) {
-        setModalMessage("You have already liked this comment.");
-        setConfirmAction(null); // No confirm action needed
+        setModalMessage('You have already liked this comment.');
+        setConfirmAction(null);
         setModalOpen(true);
       } else {
-        await axios.put(
-          `${import.meta.env.VITE_SERVER_URL}/comments/update/${id}`,
-          { username: commenter },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        fetchComments();
+        await axiosInstance.put(`/comments/update/${id}`, { username: commenter }, {
+          headers: {
+            Authorization: accessToken,
+            RefreshToken: refreshToken,
+          },
+        });
+        fetchComments(accessToken);
       }
     } catch (error) {
-      console.error("Error liking comment:", error);
+      handleTokenRefreshError(error);
     }
   };
 
   const handleDelete = async (id) => {
-    setModalMessage("Are you sure you want to delete this comment?");
-    setConfirmAction(() => () => confirmDelete(id));
-    setModalOpen(true);
+    try {
+      const newAccessToken = getCookie('accessToken'); // Get latest access token
+      setModalMessage('Are you sure you want to delete this comment?');
+      setConfirmAction(() => () => confirmDelete(id, newAccessToken)); // Pass token to confirmDelete
+      setModalOpen(true);
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+      // Handle error (e.g., show a message to the user)
+    }
   };
 
-  const confirmDelete = async (id) => {
+  const confirmDelete = async (id, newAccessToken) => {
     try {
-      await axios.delete(
-        `${import.meta.env.VITE_SERVER_URL}/comments/delete/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axiosInstance.delete(`/comments/delete/${id}`, {
+        headers: {
+          Authorization: accessToken,
+          RefreshToken: refreshToken,
+        },
+      });
       setModalOpen(false);
-      fetchComments();
+      fetchComments(accessToken);
     } catch (error) {
-      console.error("Error deleting comment:", error);
+      handleTokenRefreshError(error);
     }
+  };
+
+  const handleCommentModalClose = () => {
+    setModalOpen(false);
+    setModalMessage('');
+    setConfirmAction(null);
   };
 
   return (
@@ -125,14 +163,14 @@ function Comments() {
         <p id="total-comments">{totalComments} Comments</p>
         <div className="comment-sort-buttons">
           <button
-            onClick={() => setSortType("top")}
-            className={sortType === "top" ? "active" : ""}
+            onClick={() => setSortType('top')}
+            className={sortType === 'top' ? 'active' : ''}
           >
             Top Comments
           </button>
           <button
-            onClick={() => setSortType("new")}
-            className={sortType === "new" ? "active" : ""}
+            onClick={() => setSortType('new')}
+            className={sortType === 'new' ? 'active' : ''}
           >
             New Comments
           </button>
@@ -178,10 +216,10 @@ function Comments() {
       </div>
       <Modal
         isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
+        onClose={handleCommentModalClose}
         onConfirm={confirmAction}
         message={modalMessage}
-        confirmButtonText={confirmAction ? "Delete" : "OK"}
+        confirmButtonText={confirmAction ? 'Delete' : 'OK'}
         showCancelButton={!!confirmAction}
       />
     </div>
