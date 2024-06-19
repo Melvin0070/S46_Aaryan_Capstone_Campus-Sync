@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import axiosInstance from './axiosInstance';
 import { FaThumbsUp, FaTrash } from 'react-icons/fa';
 import Modal from './modal';
-import { getCookie, setCookie } from './cookies.jsx';
 import './comments.css';
+import { getCookie, setCookie } from './cookies.jsx'; //import cookies functions from cookie.jsx
+import axiosInstance from './axiosInstance';  // import axiosInstance
 
 function Comments() {
   const [comments, setComments] = useState([]);
@@ -14,8 +14,8 @@ function Comments() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [confirmAction, setConfirmAction] = useState(null);
-  const [accessToken, setAccessToken] = useState(getCookie('accessToken'));
-  const refreshToken = getCookie('refreshToken');
+  const [accessToken, setAccessToken] = useState(getCookie('accessToken'));  //get access token from cookie
+  const refreshToken = getCookie('refreshToken');  //get refresh token from cookie
   const username = getCookie('username');
 
   useEffect(() => {

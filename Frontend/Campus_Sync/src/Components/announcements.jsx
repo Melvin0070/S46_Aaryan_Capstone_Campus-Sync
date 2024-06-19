@@ -8,8 +8,8 @@ import axiosInstance from "./axiosInstance.js"; // Import axiosInstance
 function Announcements() {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [accessToken, setAccessToken] = useState(getCookie("accessToken"));
-  const refreshToken = getCookie("refreshToken");
+  const [accessToken, setAccessToken] = useState(getCookie("accessToken"));  //get access token from cookie
+  const refreshToken = getCookie("refreshToken");  //get refresh token from cookie
 
   useEffect(() => {
     if (accessToken) {
@@ -24,7 +24,7 @@ function Announcements() {
     try {
       const response = await axiosInstance.get("/drops/files", {
         headers: {
-          Authorization: token,
+          Authorization: token,  //sent token inside authorization
         },
       });
       setFiles(Array.isArray(response.data) ? response.data.reverse() : []);
