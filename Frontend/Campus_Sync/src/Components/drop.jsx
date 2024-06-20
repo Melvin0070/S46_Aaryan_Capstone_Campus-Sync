@@ -1,26 +1,37 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "./drop.css";
+import { getCookie } from "./cookies.jsx";
 
 function Drop() {
   const [selectedFile, setSelectedFile] = useState(null);
-  const [uploadStatus, setUploadStatus] = useState("");
   const [files, setFiles] = useState([]);
   const [username, setUsername] = useState("");
   const [topic, setTopic] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const fileInputRef = useRef(null);
+  const token = getCookie("accessToken"); // Retrieve JWT token from cookies
+  const usernameFromCookie = getCookie("username"); // Retrieve username from cookies
 
   useEffect(() => {
-    fetchFiles();
-  }, []);
+    if (usernameFromCookie) {
+      setUsername(usernameFromCookie); // Set the username state with the username from cookies
+    }
+
+    fetchFiles(); // Fetch files when the component mounts or when the token changes
+  }, [token]);
 
   const fetchFiles = async () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        import.meta.env.VITE_SERVER_URL + "/drops/files"
+        `${import.meta.env.VITE_SERVER_URL}/drops/files`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include JWT token in headers if needed
+          },
+        }
       );
       setFiles(Array.isArray(response.data) ? response.data.reverse() : []);
     } catch (error) {
@@ -40,7 +51,7 @@ function Drop() {
   const handleUpload = async (e) => {
     e.preventDefault();
     if (!selectedFile || !topic) {
-      setUploadStatus("Please select a file and enter a topic.");
+      console.error("Please select a file and enter a topic.");
       return;
     }
     setLoading(true);
@@ -51,20 +62,22 @@ function Drop() {
 
     try {
       const response = await axios.post(
-        import.meta.env.VITE_SERVER_URL + "/drops/upload",
+        `${import.meta.env.VITE_SERVER_URL}/drops/upload`,
         formData,
         {
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`, // Include JWT token in headers if needed
+          },
         }
       );
-      setUploadStatus(response.data.message);
+      console.log("File Uploaded Successfully");
       setSelectedFile(null);
       setTopic("");
       fetchFiles();
       fileInputRef.current.value = "";
     } catch (error) {
-      console.error(error);
-      setUploadStatus("File upload failed.");
+      console.error("File upload failed.", error);
     }
     setLoading(false);
   };
@@ -73,8 +86,11 @@ function Drop() {
     setLoading(true);
     try {
       const response = await axios.delete(
-        import.meta.env.VITE_SERVER_URL + `/drops/files/${fileId}`,
+        `${import.meta.env.VITE_SERVER_URL}/drops/files/${fileId}`,
         {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include JWT token in headers if needed
+          },
           data: { uploadedBy: username },
         }
       );
@@ -108,13 +124,6 @@ function Drop() {
           <div className="upload-section">
             <h4>Drop a Notice</h4>
             <p className="warning">(Do not post any inappropriate content)</p>
-            <input
-              type="text"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="drop-username-input"
-            />
             <form onSubmit={handleUpload} className="drop-form">
               <input
                 type="text"
@@ -135,7 +144,6 @@ function Drop() {
                 {loading ? "Uploading..." : "Upload"}
               </button>
             </form>
-            <div className="drop-status">{uploadStatus}</div>
           </div>
         </div>
 
@@ -146,7 +154,7 @@ function Drop() {
             ) : files.length > 0 ? (
               <>
                 <button
-                  className= "carousel-button"
+                  className="carousel-button"
                   onClick={handlePrev}
                   disabled={currentIndex === 0}
                 >
@@ -193,7 +201,7 @@ function Drop() {
                   )}
                 </div>
                 <button
-                  className= "carousel-button"
+                  className="carousel-button"
                   onClick={handleNext}
                   disabled={currentIndex === files.length - 1}
                 >

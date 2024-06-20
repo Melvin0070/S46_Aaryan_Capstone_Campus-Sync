@@ -1,28 +1,35 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import "./announcements.css";
 import rightArrow from "../assets/right-arrow-short.png";
 import { Link } from "react-router-dom";
+import { getCookie } from "./cookies.jsx";
+import axios from "axios"; // Import Axios directly
 
 function Announcements() {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
+  const accessToken = getCookie("accessToken"); // Get access token from cookie
 
   useEffect(() => {
-    fetchFiles();
-  }, []);
+    if (accessToken) {
+      fetchFiles(accessToken);
+    }
+  }, [accessToken]); // Trigger useEffect when accessToken changes
 
-  const fetchFiles = async () => {
+  const fetchFiles = async (token) => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        import.meta.env.VITE_SERVER_URL + "/drops/files"
-      );
+      const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/drops/files`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Send token in Authorization header
+        },
+      });
       setFiles(Array.isArray(response.data) ? response.data.reverse() : []);
     } catch (error) {
-      console.error(error);
+      console.error("Error fetching files:", error);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
@@ -35,7 +42,7 @@ function Announcements() {
           </div>
         ) : files.length > 0 ? (
           files.slice(0, 3).map((file, index) => (
-            <Link to="/drops" className="link-tag">
+            <Link to="/drops" className="link-tag" key={file._id}>
               <div key={index} className="announcement-div">
                 <div id="drop-container">
                   <p>

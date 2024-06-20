@@ -20,12 +20,11 @@
     font-size: 18px;
     font-weight: 500;
     cursor: pointer;
-    transition: box-shadow 0.2s ease, transform 0.2s ease, scale 0.2s ease;
 }
 
-.sidebar-buttons:active {
-    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.6); 
-    transform: translateY(4px); 
+.sidebar-buttons.active {
+    background-color: #c1c1c1;
+    filter: invert(1);
   }
 
 .sidebar-img-p {
@@ -54,7 +53,7 @@
     transition: all 0.50s ease;
 }
 
-#logout-div:active {   
+#logout-div:active {
     box-shadow: none;
     background-color: #00005b;
     scale: 0.90;

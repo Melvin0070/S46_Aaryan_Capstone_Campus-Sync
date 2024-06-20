@@ -1,13 +1,13 @@
 import express from "express";
 import * as studentController from "../controllers/studentController.js";
-
+import { verifyToken } from '../controllers/jwtMiddleware.js';
 
 const router = express.Router();
 const { getStudentData, createStudent, updateStudent, deleteStudent } = studentController;
 
-router.get("/details/:ID", getStudentData);
-router.post("/create", createStudent);
-router.put("/update/:ID", updateStudent);
-router.delete("/delete/:ID", deleteStudent);
+router.get("/details/:ID", verifyToken, getStudentData);
+router.post("/create", verifyToken, createStudent);
+router.put("/update/:ID", verifyToken, updateStudent);
+router.delete("/delete/:ID", verifyToken, deleteStudent);
 
 export default router;

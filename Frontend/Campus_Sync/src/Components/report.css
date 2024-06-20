@@ -30,6 +30,7 @@
     font-weight: 500;
     height: 30px;
     width: 100%;
+    letter-spacing: 0.5px;
     border-radius: 6px;
     outline: none;
     border: none;
@@ -43,6 +44,7 @@
     font-weight: 500;
     height: 60px;
     width: 100%;
+    letter-spacing: -1px;
     border-radius: 6px;
     outline: none;
     border: none;
@@ -86,7 +88,7 @@
     height: 250px;
     width: 350px;
     margin: 40px auto;
-    background-color: #007aa730;
+    background-color: #007aa777;
     border-radius: 5px;
 }
 
@@ -100,7 +102,7 @@
 }
 
 .report-controll-buttons button {
-    background-color: #007aa7a6;
+    background-color: #007BA7;
     border: none;
     color: white;
     padding: 12px 6px;
@@ -112,12 +114,8 @@
     transform: rotate(+90deg);
 }
 
-.report-controll-buttons button:hover {
-    background-color: #007BA7;
-}
-
 .report-controll-buttons button:disabled {
-    background-color: #b3b3cc;
+    background-color: #689bad;
     cursor: not-allowed;
 }
 
@@ -137,14 +135,16 @@
 }
 
 #past-reports-white p {
+    font-weight: 600;
     margin: 5px 12px;
-    color: rgb(60, 60, 60);
+    color: rgb(0, 0, 0);
     line-height: 19px;
+    font-size: 15px;
 }
 
 #past-reports-white p span {
     font-weight: 500;
-    color: black;
+    color: rgb(58, 58, 58);
     font-style: normal;
 }
 

@@ -1,14 +1,43 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./result.css";
+import { getCookie } from './cookies'; 
+import { jwtDecode } from "jwt-decode";
 
 function Result() {
   const [score, setScore] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  // Retrieve the JWT token from cookies or local storage
+  const token = getCookie("accessToken"); 
+  let userID = null;
+
+  if (token) {
+    try {
+      // Decode the token to get the user ID
+      const decodedToken = jwtDecode(token); 
+      userID = decodedToken.ID;
+    } catch (error) {
+      console.error("Invalid token", error);
+    }
+  }
+
   useEffect(() => {
+    fetchScoreDetails();
+  }, [token]);  // Fetch rewsult details whenever token changes
+
+  const fetchScoreDetails = () => {
+    if (!userID) {
+      console.error("User ID is not available in the token");
+      return;
+    }
+
     axios
-      .get(import.meta.env.VITE_SERVER_URL + "/scores/details/ADMN2004")
+      .get(import.meta.env.VITE_SERVER_URL + `/scores/details/${userID}`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the headers
+        },
+      })
       .then((response) => {
         // Reverse the details array before setting it in the state
         const reversedScore = {
@@ -20,7 +49,7 @@ function Result() {
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+  };
 
   const handlePrevClick = () => {
     setCurrentIndex((prevIndex) => Math.max(0, prevIndex - 1));

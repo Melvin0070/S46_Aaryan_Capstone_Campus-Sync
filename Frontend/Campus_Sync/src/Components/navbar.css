@@ -1,10 +1,10 @@
 #navbar {
-   background-color: #000080; 
-   height: 14vh;
-   width: 100%;
-   display: flex;
-   align-items: center;
-   justify-content: space-between;
+    background-color: #000080;
+    height: 14vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 #logo-img {
@@ -30,7 +30,7 @@
 }
 
 #navbar-account {
-    background-color: white;
+    border: 1px solid #eeeeee;
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -39,5 +39,54 @@
     font-weight: 600;
     margin: 0 40px;
     width: 40px;
-    font-size: 22px;    
+    font-size: 22px;
+}
+
+#account-div-navbar {
+    position: absolute;
+    top: 11%;
+    right: 1%;
+    width: 300px;
+    background-color: #323232;
+    border: 1px solid #9f9f9f;
+    box-shadow: 0 1px 4px 1px rgb(33, 33, 33);
+    border-radius: 8px;
+    z-index: 1000;
+    padding: 16px 8px;
+    color: #fff;
+}
+
+.profile-popup {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-details {
+    font-weight: 500;
+    font-size: 13px;
+    color: #dedede;
+    text-align: center;
+}
+
+.profile-details .username {
+    font-size: 16px;
+}
+
+.profile-details .email {
+    padding: 2px 0 10px 0;
+    border-bottom: 1px solid #919191;
+}
+
+.profile-details .user-id {
+    padding-top: 5px;
+    font-size: 18px;
+    color: #ededed;
+
+    font-weight: 800;
 }

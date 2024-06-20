@@ -1,35 +1,82 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./report.css";
+import { getCookie } from './cookies'; 
+import { jwtDecode } from "jwt-decode";
 
 function Report() {
   const [id, setId] = useState("");
   const [concern, setConcern] = useState("");
   const [proposal, setProposal] = useState("");
+  const [reportData, setReportData] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const token = getCookie("accessToken"); // Retrieve token from cookies
 
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission behavior and reloading the entire page
+  useEffect(() => {
+    fetchReportDetails();
+  }, [token]); // Fetch report details whenever token changes
 
-    // Check if ID and Concern are not empty
-    if (!id.trim() || !concern.trim()) {
-      alert("Please fill in all mandatory fields (ID and Concern)");
+  const fetchReportDetails = () => {
+    if (!token) {
+      console.error("Token not found in cookies");
       return;
     }
-    const reportData = {
-      ID: id,
-      issue: concern,
-      proposal,
-    };
 
     try {
-      // Making a POST request
+      const decodedToken = jwtDecode(token); // Decode token to get user ID
+      const userID = decodedToken.ID;
+
+      axios
+        .get(import.meta.env.VITE_SERVER_URL + `/reports/details/${userID}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          setReportData(response.data.reverse());
+        })
+        .catch((error) => {
+          console.error("Error fetching reports:", error);
+        });
+    } catch (error) {
+      console.error("Error decoding token:", error);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!token) {
+      console.error("Token not found in cookies");
+      return;
+    }
+
+    try {
+      const decodedToken = jwtDecode(token); // Decode token to get user ID
+      const userID = decodedToken.ID;
+
+      const reportData = {
+        ID: id,
+        issue: concern,
+        proposal,
+      };
+
       const response = await axios.post(
         import.meta.env.VITE_SERVER_URL + "/reports/create",
-        reportData
+        reportData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       if (response.status === 201) {
         alert("Report created successfully");
+        fetchReportDetails();
+        setId("");
+        setConcern("");
+        setProposal("");
       } else {
         alert(`Error: ${response.data.message}`);
       }
@@ -38,20 +85,6 @@ function Report() {
       alert("Internal server error");
     }
   };
-
-  const [reportData, setReportData] = useState(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  useEffect(() => {
-    axios
-      .get(import.meta.env.VITE_SERVER_URL + "/reports/details/ADMN2004")
-      .then((response) => {
-        setReportData(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
 
   const handlePrevClick = () => {
     setCurrentIndex((prevIndex) => Math.max(0, prevIndex - 1));

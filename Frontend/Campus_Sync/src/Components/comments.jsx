@@ -1,88 +1,135 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
 import { FaThumbsUp, FaTrash } from 'react-icons/fa';
 import Modal from './modal';
-import "./comments.css";
+import './comments.css';
+import { getCookie } from './cookies.jsx'; //import cookies functions from cookie.jsx
+import axios from 'axios';  // Import Axios directly
 
 function Comments() {
   const [comments, setComments] = useState([]);
-  const [commenter, setCommenter] = useState("Cookies.name"); //set the cokkies.name
-  const [comment, setComment] = useState("");
-  const [sortType, setSortType] = useState("new");
+  const [commenter, setCommenter] = useState('');
+  const [comment, setComment] = useState('');
+  const [sortType, setSortType] = useState('new');
   const [totalComments, setTotalComments] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
+  const [modalMessage, setModalMessage] = useState('');
   const [confirmAction, setConfirmAction] = useState(null);
+  const accessToken = getCookie('accessToken');  //get access token from cookie
+  const username = getCookie('username');
 
   useEffect(() => {
-    fetchComments();
-  }, [sortType]);
+    if (username) {
+      setCommenter(username);
+    }
 
-  const fetchComments = async () => {
+    if (accessToken) {
+      fetchComments(accessToken);
+    }
+  }, [sortType, username, accessToken]);
+
+  const fetchComments = async (token) => {
     try {
-      const response = await axios.get(
-        import.meta.env.VITE_SERVER_URL + "/comments/details"
-      );
+      const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/comments/details`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const sortedComments = sortComments(response.data);
       setComments(sortedComments);
       setTotalComments(response.data.length);
     } catch (error) {
-      console.error("Error fetching comments:", error);
+      if (error.response && error.response.status === 401) {
+        console.error("Access token expired or invalid");
+        // Handle logout or redirect to login page
+      } else {
+        console.error('Error fetching comments:', error);
+      }
     }
   };
 
   const sortComments = (comments) => {
-    if (sortType === "top") {
+    if (sortType === 'top') {
       return comments.sort((a, b) => b.likes - a.likes);
     } else {
-      return comments.sort(
-        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-      );
+      return comments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).reverse();
     }
   };
 
   const handleCreateComment = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(import.meta.env.VITE_SERVER_URL +"/comments/create", { commenter, comment });
-      setCommenter("Cookies.name");  //once use cookies name then make this empty string again
-      setComment("");
-      fetchComments();
+      await axios.post(`${import.meta.env.VITE_SERVER_URL}/comments/create`, { commenter, comment }, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      setComment('');
+      fetchComments(accessToken);
     } catch (error) {
-      console.error("Error creating comment:", error);
+      console.error('Error creating comment:', error);
+      // Handle error (e.g., show a message to the user)
     }
   };
 
   const handleLike = async (id) => {
     try {
-      const comment = comments.find(comment => comment._id === id);
-      if (comment && comment.hasLiked) {
-        setModalMessage("You have already liked this comment.");
+      const comment = comments.find((comment) => comment._id === id);
+      if (comment && comment.likedBy.includes(commenter)) {
+        setModalMessage('You have already liked this comment.');
         setConfirmAction(null);
         setModalOpen(true);
       } else {
-        await axios.put(import.meta.env.VITE_SERVER_URL + `/comments/update/${id}`);
-        fetchComments();
+        await axios.put(`${import.meta.env.VITE_SERVER_URL}/comments/update/${id}`, { username: commenter }, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        fetchComments(accessToken);
       }
     } catch (error) {
-      console.error("Error liking comment:", error);
+      if (error.response && error.response.status === 401) {
+        console.error("Access token expired or invalid");
+        // Handle logout or redirect to login page
+      } else {
+        console.error('Error updating comment:', error);
+      }
     }
   };
 
   const handleDelete = async (id) => {
-    setModalMessage("Are you sure you want to delete this comment?");
-    setConfirmAction(() => () => confirmDelete(id));
-    setModalOpen(true);
+    try {
+      setModalMessage('Are you sure you want to delete this comment?');
+      setConfirmAction(() => () => confirmDelete(id));
+      setModalOpen(true);
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+      // Handle error (e.g., show a message to the user)
+    }
   };
 
   const confirmDelete = async (id) => {
     try {
-      await axios.delete(import.meta.env.VITE_SERVER_URL + `/comments/delete/${id}`);
+      await axios.delete(`${import.meta.env.VITE_SERVER_URL}/comments/delete/${id}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
       setModalOpen(false);
-      fetchComments();
+      fetchComments(accessToken);
     } catch (error) {
-      console.error("Error deleting comment:", error);
+      if (error.response && error.response.status === 401) {
+        console.error("Access token expired or invalid");
+        // Handle logout or redirect to login page
+      } else {
+        console.error('Error deleting comment:', error);
+      }
     }
+  };
+
+  const handleCommentModalClose = () => {
+    setModalOpen(false);
+    setModalMessage('');
+    setConfirmAction(null);
   };
 
   return (
@@ -91,14 +138,14 @@ function Comments() {
         <p id="total-comments">{totalComments} Comments</p>
         <div className="comment-sort-buttons">
           <button
-            onClick={() => setSortType("top")}
-            className={sortType === "top" ? "active" : ""}
+            onClick={() => setSortType('top')}
+            className={sortType === 'top' ? 'active' : ''}
           >
             Top Comments
           </button>
           <button
-            onClick={() => setSortType("new")}
-            className={sortType === "new" ? "active" : ""}
+            onClick={() => setSortType('new')}
+            className={sortType === 'new' ? 'active' : ''}
           >
             New Comments
           </button>
@@ -144,10 +191,10 @@ function Comments() {
       </div>
       <Modal
         isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
+        onClose={handleCommentModalClose}
         onConfirm={confirmAction}
         message={modalMessage}
-        confirmButtonText="Delete"
+        confirmButtonText={confirmAction ? 'Delete' : 'OK'}
         showCancelButton={!!confirmAction}
       />
     </div>

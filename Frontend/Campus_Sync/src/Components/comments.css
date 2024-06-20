@@ -83,13 +83,15 @@
 
 .comment-list .commenter {
     font-weight: 700;
-    font-size: 15px;
-    color: rgb(37, 37, 37);
+    letter-spacing: 0.5px;
+    font-size: 13px;
+    color: rgb(0, 0, 0);
 }
 
 .comments {
     margin-top: 5px;
-    font-size: 17px;
+    font-size: 16px;
+    letter-spacing: 0.5px;
     color: rgb(41, 41, 41);
     word-break: break-word; 
     line-height: 19px;

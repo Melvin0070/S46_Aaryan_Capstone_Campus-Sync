@@ -1,25 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './alumni.css';
+import { getCookie } from './cookies.jsx'; 
 
 function Alumni() {
   const [alumni, setAlumni] = useState([]);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
+  const token = getCookie('accessToken'); // Retrieve JWT token from cookies
 
   useEffect(() => {
     const fetchAlumni = async () => {
       try {
-        const response = await axios.get(import.meta.env.VITE_SERVER_URL + '/alumnis/details');
+        const response = await axios.get(
+          `${import.meta.env.VITE_SERVER_URL}/alumnis/details`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Include JWT token in headers
+            },
+          }
+        );
         setAlumni(response.data);
       } catch (error) {
         console.error('Error fetching alumni data:', error);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
     fetchAlumni();
-  }, []);
+  }, [token]); //Get the alumni whenever the token changes
 
   return (
     <div className="alumni-container">

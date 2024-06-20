@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./rank.css";
+import { getCookie } from './cookies'; 
 
 function Rank() {
   const [scoresData, setScoresData] = useState([]);
@@ -9,16 +10,26 @@ function Rank() {
   const [results, setResults] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
+ 
+  const token = getCookie("accessToken");  //retrieve token from cookies
+
   useEffect(() => {
-    axios
-      .get(import.meta.env.VITE_SERVER_URL + "/scores/details")
-      .then((response) => {
-        setScoresData(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching scores:", error);
+    fetchScoresData();
+  }, [token]); // Fetch score details whenever token changes
+
+  // Function to fetch scores data
+  const fetchScoresData = async () => {
+    try {
+      const response = await axios.get(import.meta.env.VITE_SERVER_URL + "/scores/details", {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the headers
+        },
       });
-  }, []);
+      setScoresData(response.data);
+    } catch (error) {
+      console.error("Error fetching scores:", error);
+    }
+  };
 
   // Function to handle form submission
   const handleSubmit = (event) => {
@@ -129,4 +140,5 @@ function Rank() {
     </div>
   );
 }
+
 export default Rank;
