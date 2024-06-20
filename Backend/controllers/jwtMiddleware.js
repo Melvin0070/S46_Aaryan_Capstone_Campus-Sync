@@ -4,7 +4,7 @@ const accessSecretKey = process.env.JWT_ACCESS_SECRET;
 
 // Function to generate access token
 export const generateToken = (user) => {
-  return jwt.sign({ ID: user.ID }, accessSecretKey, { expiresIn: '1h' });
+  return jwt.sign({ ID: user.ID }, accessSecretKey, { expiresIn: '11h' });
 };
 
 // Middleware to verify access token

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { setCookie } from "../Components/cookies";
 import sideframe from "../assets/side-frame.jpg";
 import loginLogo from "../assets/login-logo.png";
-import './Login.css';
+import "./Login.css";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
@@ -25,7 +25,7 @@ const LoginPage = () => {
         setCookie("username", username, 1);
         setCookie("email", email, 1);
         setCookie("accessToken", response.data.accessToken, 1); // Store accessToken in cookies
-  
+
         navigate("/home"); // Redirect to home page upon successful login
       } else {
         console.log("ID number does not match any existing user.");
@@ -36,7 +36,6 @@ const LoginPage = () => {
       setLoading(false);
     }
   };
-  
 
   return (
     <div id="Login-Container">
@@ -89,6 +88,32 @@ const LoginPage = () => {
               <label htmlFor="auth-toggle" aria-hidden="true">
                 User Guide
               </label>
+              <div className="user-guide">
+                <p id="instruct-1">
+                  <span>1.</span> Thank you for testing our website! To get started, use one
+                  of the following User IDs for login:
+                </p>
+                <ul>
+                  <li>ADMN2004</li>
+                  <li>ADMN2005</li>
+                  <li>ADMN2006</li>
+                  <li>ADMN2007</li>
+                  <li>ADMN2008</li>
+                </ul>
+                <p className="highlight">
+                  Only these User IDs will grant access during the beta phase.
+                  Using any other ID won't allow login.
+                </p>
+                <p id="instruct-2">
+                <span>2.</span> While you can use your own username and email to login,
+                  features are limited to the provided User IDs, as they are
+                  pre-verified in our database.
+                </p>
+                <p id="instruct-3">
+                <span>3.</span> We are working to integrate a secured signup process and Faculty Dashboard for smooth data upload. Your feedback
+                  during this testing phase is valuable!
+                </p>
+              </div>
             </div>
           </div>
         </div>
