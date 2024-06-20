@@ -10,7 +10,7 @@ function Report() {
   const [proposal, setProposal] = useState("");
   const [reportData, setReportData] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const token = getCookie("token"); // Retrieve token from cookies
+  const token = getCookie("accessToken"); // Retrieve token from cookies
 
   useEffect(() => {
     fetchReportDetails();

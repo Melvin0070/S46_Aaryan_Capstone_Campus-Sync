@@ -11,7 +11,7 @@ function Rank() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
  
-  const token = getCookie("token");  //retrieve token from cookies
+  const token = getCookie("accessToken");  //retrieve token from cookies
 
   useEffect(() => {
     fetchScoresData();

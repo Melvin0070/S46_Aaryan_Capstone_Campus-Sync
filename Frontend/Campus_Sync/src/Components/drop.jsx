@@ -11,7 +11,7 @@ function Drop() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const fileInputRef = useRef(null);
-  const token = getCookie("token"); // Retrieve JWT token from cookies
+  const token = getCookie("accessToken"); // Retrieve JWT token from cookies
   const usernameFromCookie = getCookie("username"); // Retrieve username from cookies
 
   useEffect(() => {

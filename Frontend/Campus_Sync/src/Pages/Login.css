@@ -4,7 +4,7 @@
     align-items: center;
     min-height: 100vh;
     background:
-        linear-gradient(to left, rgba(229, 234, 255, 0.3) 50%, rgb(231, 235, 255) 95%),
+        linear-gradient(to left, rgba(229, 234, 255, 0.2) 50%, rgb(231, 235, 255) 95%),
         url('../assets/Login-BG.jpg');
     background-size: 100% 100%;
 }
@@ -20,7 +20,7 @@
 .Login-Wrapper {
     display: flex;
     border-radius: 12px;
-    background-color: #fff;
+    background-color: #ffffff;
     box-shadow: 0 10px 30px #4c4c4c;
 }
 

@@ -2,55 +2,33 @@ import React, { useEffect, useState } from "react";
 import "./announcements.css";
 import rightArrow from "../assets/right-arrow-short.png";
 import { Link } from "react-router-dom";
-import { getCookie, setCookie } from "./cookies.jsx";
-import axiosInstance from "./axiosInstance.js"; // Import axiosInstance
+import { getCookie } from "./cookies.jsx";
+import axios from "axios"; // Import Axios directly
 
 function Announcements() {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [accessToken, setAccessToken] = useState(getCookie("accessToken"));  //get access token from cookie
-  const refreshToken = getCookie("refreshToken");  //get refresh token from cookie
+  const accessToken = getCookie("accessToken"); // Get access token from cookie
 
   useEffect(() => {
     if (accessToken) {
       fetchFiles(accessToken);
-    } else if (refreshToken) {
-      refreshAccessTokenAndFetchFiles();
     }
   }, [accessToken]); // Trigger useEffect when accessToken changes
 
   const fetchFiles = async (token) => {
     setLoading(true);
     try {
-      const response = await axiosInstance.get("/drops/files", {
+      const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/drops/files`, {
         headers: {
-          Authorization: token,  //sent token inside authorization
+          Authorization: `Bearer ${token}`, // Send token in Authorization header
         },
       });
       setFiles(Array.isArray(response.data) ? response.data.reverse() : []);
     } catch (error) {
-      if (error.response && error.response.status === 401) {
-        refreshAccessTokenAndFetchFiles();
-      } else {
-        console.error(error);
-      }
-    }
-    setLoading(false);
-  };
-
-  const refreshAccessTokenAndFetchFiles = async () => {
-    try {
-      const response = await axiosInstance.post("/users/token", { refreshToken });
-      if (response.data && response.data.accessToken) {
-        const newAccessToken = response.data.accessToken;
-        setCookie("accessToken", newAccessToken, 1); // Update access token in cookies
-        setAccessToken(newAccessToken); // Update access token in state
-        fetchFiles(newAccessToken); // Retry fetching files with new access token
-      } else {
-        console.error("Failed to refresh token");
-      }
-    } catch (error) {
-      console.error("Error refreshing token:", error);
+      console.error("Error fetching files:", error);
+    } finally {
+      setLoading(false);
     }
   };
 

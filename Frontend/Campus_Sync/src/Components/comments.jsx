@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { FaThumbsUp, FaTrash } from 'react-icons/fa';
 import Modal from './modal';
 import './comments.css';
-import { getCookie, setCookie } from './cookies.jsx'; //import cookies functions from cookie.jsx
-import axiosInstance from './axiosInstance';  // import axiosInstance
+import { getCookie } from './cookies.jsx'; //import cookies functions from cookie.jsx
+import axios from 'axios';  // Import Axios directly
 
 function Comments() {
   const [comments, setComments] = useState([]);
@@ -14,8 +14,7 @@ function Comments() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [confirmAction, setConfirmAction] = useState(null);
-  const [accessToken, setAccessToken] = useState(getCookie('accessToken'));  //get access token from cookie
-  const refreshToken = getCookie('refreshToken');  //get refresh token from cookie
+  const accessToken = getCookie('accessToken');  //get access token from cookie
   const username = getCookie('username');
 
   useEffect(() => {
@@ -25,57 +24,27 @@ function Comments() {
 
     if (accessToken) {
       fetchComments(accessToken);
-    } else if (refreshToken) {
-      refreshAccessTokenAndFetchComments();
     }
   }, [sortType, username, accessToken]);
 
   const fetchComments = async (token) => {
     try {
-      const response = await axiosInstance.get('/comments/details', {
+      const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/comments/details`, {
         headers: {
-          Authorization: token,
-          RefreshToken: refreshToken,
+          Authorization: `Bearer ${token}`,
         },
       });
       const sortedComments = sortComments(response.data);
       setComments(sortedComments);
       setTotalComments(response.data.length);
     } catch (error) {
-      handleTokenRefreshError(error);
-    }
-  };
-
-  const refreshAccessTokenAndFetchComments = async () => {
-    try {
-      const response = await axiosInstance.post('/users/token', { refreshToken });
-      if (response.data && response.data.accessToken) {
-        const newAccessToken = response.data.accessToken;
-        setCookie('accessToken', newAccessToken, 1);
-        setAccessToken(newAccessToken); // Update the accessToken state
-        fetchComments(newAccessToken);
+      if (error.response && error.response.status === 401) {
+        console.error("Access token expired or invalid");
+        // Handle logout or redirect to login page
       } else {
-        console.error('Failed to refresh token');
-        handleTokenRefreshFailure();
+        console.error('Error fetching comments:', error);
       }
-    } catch (error) {
-      handleTokenRefreshError(error);
     }
-  };
-
-  const handleTokenRefreshError = (error) => {
-    if (error.response && error.response.status === 401) {
-      refreshAccessTokenAndFetchComments();
-    } else {
-      console.error('Error fetching comments:', error);
-      // Handle other errors as needed
-    }
-  };
-
-  const handleTokenRefreshFailure = () => {
-    // Handle refresh token failure (e.g., logout or display error message)
-    console.error('Failed to refresh token');
-    // Optionally, perform logout or display an error message
   };
 
   const sortComments = (comments) => {
@@ -89,10 +58,9 @@ function Comments() {
   const handleCreateComment = async (e) => {
     e.preventDefault();
     try {
-      await axiosInstance.post('/comments/create', { commenter, comment }, {
+      await axios.post(`${import.meta.env.VITE_SERVER_URL}/comments/create`, { commenter, comment }, {
         headers: {
-          Authorization: accessToken,
-          RefreshToken: refreshToken,
+          Authorization: `Bearer ${accessToken}`,
         },
       });
       setComment('');
@@ -111,24 +79,27 @@ function Comments() {
         setConfirmAction(null);
         setModalOpen(true);
       } else {
-        await axiosInstance.put(`/comments/update/${id}`, { username: commenter }, {
+        await axios.put(`${import.meta.env.VITE_SERVER_URL}/comments/update/${id}`, { username: commenter }, {
           headers: {
-            Authorization: accessToken,
-            RefreshToken: refreshToken,
+            Authorization: `Bearer ${accessToken}`,
           },
         });
         fetchComments(accessToken);
       }
     } catch (error) {
-      handleTokenRefreshError(error);
+      if (error.response && error.response.status === 401) {
+        console.error("Access token expired or invalid");
+        // Handle logout or redirect to login page
+      } else {
+        console.error('Error updating comment:', error);
+      }
     }
   };
 
   const handleDelete = async (id) => {
     try {
-      const newAccessToken = getCookie('accessToken'); // Get latest access token
       setModalMessage('Are you sure you want to delete this comment?');
-      setConfirmAction(() => () => confirmDelete(id, newAccessToken)); // Pass token to confirmDelete
+      setConfirmAction(() => () => confirmDelete(id));
       setModalOpen(true);
     } catch (error) {
       console.error('Error deleting comment:', error);
@@ -136,18 +107,22 @@ function Comments() {
     }
   };
 
-  const confirmDelete = async (id, newAccessToken) => {
+  const confirmDelete = async (id) => {
     try {
-      await axiosInstance.delete(`/comments/delete/${id}`, {
+      await axios.delete(`${import.meta.env.VITE_SERVER_URL}/comments/delete/${id}`, {
         headers: {
-          Authorization: accessToken,
-          RefreshToken: refreshToken,
+          Authorization: `Bearer ${accessToken}`,
         },
       });
       setModalOpen(false);
       fetchComments(accessToken);
     } catch (error) {
-      handleTokenRefreshError(error);
+      if (error.response && error.response.status === 401) {
+        console.error("Access token expired or invalid");
+        // Handle logout or redirect to login page
+      } else {
+        console.error('Error deleting comment:', error);
+      }
     }
   };
 

@@ -19,15 +19,14 @@ const LoginPage = () => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_SERVER_URL}/users/login`,
-        { ID: password, username: username }
+        { ID: password } // Send only ID, as required by the backend
       );
-      if (response.data) {
+      if (response.data && response.data.accessToken) {
         setCookie("username", username, 1);
         setCookie("email", email, 1);
-        setCookie("accessToken", response.data.accessToken, 1); // 1 day
-        setCookie("refreshToken", response.data.refreshToken, 7); // 7 days
-
-        navigate("/home");
+        setCookie("accessToken", response.data.accessToken, 1); // Store accessToken in cookies
+  
+        navigate("/home"); // Redirect to home page upon successful login
       } else {
         console.log("ID number does not match any existing user.");
       }
@@ -37,6 +36,7 @@ const LoginPage = () => {
       setLoading(false);
     }
   };
+  
 
   return (
     <div id="Login-Container">

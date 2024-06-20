@@ -10,12 +10,11 @@ import {
 } from "react-icons/fa";
 import handlePayment from "./razorpay";
 import { getCookie } from "./cookies.jsx";
-import {jwtDecode} from "jwt-decode"; 
+import { jwtDecode } from "jwt-decode";
 
 function Fee() {
   const [feeDetails, setFeeDetails] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const token = getCookie("token"); // Retrieve JWT token from cookies
+  const token = getCookie("accessToken"); // Retrieve JWT token from cookies
 
   // Function to decode JWT token and extract user ID
   const getUserIdFromToken = () => {
@@ -41,12 +40,10 @@ function Fee() {
     const userID = getUserIdFromToken(); // Get user ID from decoded token
     if (!userID) {
       console.error("User ID not found in token");
-      setLoading(false);
       return;
     }
 
     try {
-      setLoading(true);
       const response = await axios.get(
         `${import.meta.env.VITE_SERVER_URL}/fees/details/${userID}`,
         {
@@ -56,10 +53,8 @@ function Fee() {
         }
       );
       setFeeDetails(response.data);
-      setLoading(false); // Set loading to false when data is fetched
     } catch (error) {
       console.error("Error fetching fee details:", error);
-      setLoading(false); // Set loading to false even if there's an error
     }
   };
 
@@ -74,7 +69,7 @@ function Fee() {
     });
   };
 
-  if (loading) {
+  if (!feeDetails) {
     return <div className="loading-div">Loading...</div>;
   }
 

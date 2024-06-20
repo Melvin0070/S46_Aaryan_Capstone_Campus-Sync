@@ -8,8 +8,6 @@ import help from "../assets/helpdesk.png";
 import logout from "../assets/logout.jpg";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { removeCookie, getCookie } from "../Components/cookies.jsx";
-import axiosInstance from "./axiosInstance.js"; // Import axiosInstance
-
 
 function Sidebar() {
   const location = useLocation(); // Get the current location
@@ -25,24 +23,12 @@ function Sidebar() {
 
   const navigate = useNavigate();
 
-  const handleLogout = async () => {
-    const refreshToken = getCookie("refreshToken");
-
-    try {
-      await axiosInstance.post("/users/logout", { refreshToken }); // Use axiosInstance for logout
-      console.log("Logged out successfully from server");
-    } catch (error) {
-      console.error("Error logging out:", error);
-    }
-
-    // Remove cookies
-    removeCookie("username");
-    removeCookie("email");
-    removeCookie("accessToken");
-    removeCookie("refreshToken");
-
-    console.log("Logged out successfully");
-    navigate("/");
+  const handleLogout = () => {
+    removeCookie("username");    
+    removeCookie("email");      
+    removeCookie("accessToken"); 
+    console.log("Logged out successfully"); 
+    navigate("/"); 
   };
 
   return (

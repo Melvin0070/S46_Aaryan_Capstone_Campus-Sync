@@ -1,9 +1,8 @@
 import axios from "axios";
 import { getCookie } from "./cookies";
-import { jwtDecode } from "jwt-decode";
 
 const handlePayment = async (feeId, callback) => {
-  const token = getCookie("token"); // Retrieve token from cookies
+  const token = getCookie("accessToken"); // Retrieve token from cookies
 
   try {
     // Step 1: Fetch fee details using feeId

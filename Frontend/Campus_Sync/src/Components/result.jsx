@@ -9,7 +9,7 @@ function Result() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   // Retrieve the JWT token from cookies or local storage
-  const token = getCookie("token"); 
+  const token = getCookie("accessToken"); 
   let userID = null;
 
   if (token) {

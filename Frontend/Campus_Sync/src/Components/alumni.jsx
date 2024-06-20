@@ -6,7 +6,7 @@ import { getCookie } from './cookies.jsx';
 function Alumni() {
   const [alumni, setAlumni] = useState([]);
   const [loading, setLoading] = useState(true);
-  const token = getCookie('token'); // Retrieve JWT token from cookies
+  const token = getCookie('accessToken'); // Retrieve JWT token from cookies
 
   useEffect(() => {
     const fetchAlumni = async () => {
