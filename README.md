@@ -1,4 +1,4 @@
-# Campus Sync  
+# *Campus Sync*  
 
 ---
 
@@ -81,17 +81,19 @@
 
 ## <ins>Implementation Plan</ins>
 
-### **Week 1:** Finalise project scope and requirements
-### **Week 2:** Design low-fidelity wireframes for the user interface
-### **Week 3:** Develop high-fidelity prototypes for user testing
-### **Week 4-6:** Backend development and database setup
-### **Week 7-10:** Frontend development and integration with backend systems
+#### **Week 1:** Finalise project scope and requirements
+#### **Week 2:** Design low-fidelity wireframes for the user interface
+#### **Week 3:** Develop high-fidelity prototypes for user testing
+#### **Week 4-6:** Backend development and database setup
+#### **Week 7-10:** Frontend development and integration with backend systems
 
 ---
 
 ## <u>Deployed Links</u>
 
 > [Netlify Link (Frontend):](https://campus5sync.netlify.app)
+
+
 > [Render Link (Backend):](https://campus-sync.onrender.com)
 
 
