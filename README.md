@@ -1,12 +1,8 @@
 # <ins>*Campus Sync*</ins>  
 
----
-
 ## <u>Project Overview</u>
 
 **Campus Sync is an innovative web application designed to streamline and enhance the campus experience for college and university students. It integrates multiple essential functionalities, including fee payment, score tracking, report generation, file uploads, and more, into a single platform. Leveraging modern web technologies and robust backend services, Campus Sync provides a seamless and efficient interface for both students and administrative staff.**
-
----
 
 ## <u>Features</u>
 
