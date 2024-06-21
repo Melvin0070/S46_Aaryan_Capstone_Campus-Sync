@@ -1,4 +1,4 @@
-# *Campus Sync*  
+# <ins>*Campus Sync*</ins>  
 
 ---
 
@@ -79,7 +79,7 @@
 
 ---
 
-## <ins>Implementation Plan</ins>
+## <u>Implementation Plan</u>
 
 #### **Week 1:** Finalise project scope and requirements
 #### **Week 2:** Design low-fidelity wireframes for the user interface
