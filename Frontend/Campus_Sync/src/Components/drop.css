@@ -91,7 +91,7 @@
 .carousel-section {
     flex-grow: 1;
     display: flex;
-    height: 460px;
+    height: 500px;
 }
 
 .carousel {
@@ -152,7 +152,6 @@
 
 .file-details .file-date {
     font-size: 14px;
-    color: #4b4b4b;
     margin-bottom: 10px;
     font-weight: 500;
 }
@@ -192,4 +191,56 @@
     text-align: center;
     font-size: 18px;
     color: #666666;
+}
+.file-uploader {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 5px;
+    font-weight: 500;
+    margin-right: 10px;
+}
+
+.date{
+    color: #0059cd;
+}
+
+.uploader-name {
+    color: #0059cd;
+    font-weight: bold;
+}
+
+.file-upload-details{
+    display: flex;
+    flex-direction: row;
+}
+
+.filter-section {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+.filter-dropdown {
+    position: fixed;
+    padding: 8px 12px;
+    border: 2px solid #d2d2d2;
+    margin-top: 10px;
+    margin-left: 220px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+    border-radius: 5px;
+    background-color: #f4f4f4;
+}
+
+.filter-dropdown:focus {
+    outline: none;
+}
+
+.filter-dropdown:hover {
+    border-color: #9d9d9d;
+}
+.top-section{
+    display: flex;
 }
