@@ -10,7 +10,8 @@ import {
 } from "react-icons/fa";
 import handlePayment from "./razorpay";
 import { getCookie } from "./cookies.jsx";
-import { jwtDecode } from "jwt-decode";
+import { toast } from "react-toastify"; // Import toast from React-Toastify
+import {jwtDecode} from "jwt-decode"; // Corrected the import
 
 function Fee() {
   const [feeDetails, setFeeDetails] = useState(null);
@@ -23,11 +24,11 @@ function Fee() {
         const decodedToken = jwtDecode(token);
         return decodedToken.ID;
       } else {
-        console.error("Token not found in cookies");
+        toast.error("Token not found in cookies."); // Notify about missing token
         return null;
       }
     } catch (error) {
-      console.error("Error decoding token:", error);
+      toast.error("Error decoding token. Please log in again."); // Notify about decoding error
       return null;
     }
   };
@@ -39,10 +40,10 @@ function Fee() {
   const fetchFeeDetails = async () => {
     const userID = getUserIdFromToken(); // Get user ID from decoded token
     if (!userID) {
-      console.error("User ID not found in token");
+      toast.error("User ID not found in token."); // Notify about missing user ID
       return;
     }
-
+    
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_SERVER_URL}/fees/details/${userID}`,
@@ -54,7 +55,7 @@ function Fee() {
       );
       setFeeDetails(response.data);
     } catch (error) {
-      console.error("Error fetching fee details:", error);
+      toast.error("Error fetching fee details. Please try again."); // Notify about fetch error
     }
   };
 
@@ -63,8 +64,10 @@ function Fee() {
   const handlePayNow = () => {
     handlePayment(feeDetails.ID, (paymentSuccessful) => {
       if (paymentSuccessful) {
-        // If payment was successful, fetch the fee details again
-        fetchFeeDetails();
+        toast.success("Payment successful!"); // Notify successful payment
+        fetchFeeDetails(); // Fetch fee details again after successful payment
+      } else {
+        toast.error("Payment failed. Please try again."); // Notify about payment failure
       }
     });
   };

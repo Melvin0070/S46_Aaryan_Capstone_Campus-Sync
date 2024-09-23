@@ -6,9 +6,11 @@ export const getAlumniData = async (req, res) => {
         // Retrieve all alumnis from the database and return the alumnis
         const alumnis = await Alumni.find({});
 
-        return res.status(200).json(alumnis);
-        
-    } catch (error) {
+    return res.status(200).json({
+      message: "Alumni data fetched successfully.",
+      alumnis,
+    });
+  } catch (error) {
         console.error("Error fetching alumnis:", error);
         return res.status(500).json({ message: "Internal server error" });
     }

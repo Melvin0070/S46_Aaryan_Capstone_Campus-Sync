@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "./drop.css";
 import { getCookie } from "./cookies.jsx";
+import { toast } from "react-toastify"; 
+import "react-toastify/dist/ReactToastify.css";
 
 function Drop() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -35,7 +37,7 @@ function Drop() {
       );
       setFiles(Array.isArray(response.data) ? response.data.reverse() : []);
     } catch (error) {
-      console.error(error);
+      toast.error("Error fetching files."); // Notify on error
     }
     setLoading(false);
   };
@@ -51,7 +53,7 @@ function Drop() {
   const handleUpload = async (e) => {
     e.preventDefault();
     if (!selectedFile || !topic) {
-      console.error("Please select a file and enter a topic.");
+      toast.error("Please select a file and enter a topic."); // Notify missing fields
       return;
     }
     setLoading(true);
@@ -67,17 +69,17 @@ function Drop() {
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`, // Include JWT token in headers if needed
+            Authorization: `Bearer ${token}`, // Include JWT token in headers
           },
         }
       );
-      console.log("File Uploaded Successfully");
+      toast.success(response.data.message); // Notify successful upload
       setSelectedFile(null);
       setTopic("");
       fetchFiles();
       fileInputRef.current.value = "";
     } catch (error) {
-      console.error("File upload failed.", error);
+      console.log("Error uploading")
     }
     setLoading(false);
   };
@@ -89,18 +91,17 @@ function Drop() {
         `${import.meta.env.VITE_SERVER_URL}/drops/files/${fileId}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Include JWT token in headers if needed
+            Authorization: `Bearer ${token}`, // Include JWT token in headers
           },
           data: { uploadedBy: username },
         }
       );
       if (response.status === 200) {
+        toast.success("File deleted successfully."); // Notify successful deletion
         fetchFiles();
-      } else {
-        console.error("Failed to delete the file.");
       }
     } catch (error) {
-      console.error(error);
+      toast.error("Error deleting file."); // Notify error
     }
     setLoading(false);
   };
@@ -116,6 +117,10 @@ function Drop() {
       prevIndex === files.length - 1 ? 0 : prevIndex + 1
     );
   };
+
+  if (loading) {
+    return <div>Loading...</div>; // Display a loading message
+  }
 
   return (
     <div className="drop-container">

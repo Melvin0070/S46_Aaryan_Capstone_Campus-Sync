@@ -15,7 +15,6 @@ export const createDrop = async (req, res) => {
 
         return res.status(201).json({ message: 'File uploaded and saved successfully.', file });
     } catch (error) {
-        console.error('Error uploading file:', error);
         return res.status(500).json({ message: 'Internal server error' });
     }
 };

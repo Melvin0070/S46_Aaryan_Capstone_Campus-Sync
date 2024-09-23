@@ -10,9 +10,13 @@ import Community from "./Pages/Community";
 import Drops from "./Pages/Drops";
 import AlumniIcons from "./Pages/Alumni-Icons";
 import Login from "./Pages/Login";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
+    <>
+    <ToastContainer autoClose={2000}/>
     <Router>
       <Routes>
         <Route path="/" element={<Login/>} />
@@ -26,6 +30,7 @@ function App() {
         <Route path="/alumni" element={<AlumniIcons />}></Route>
       </Routes>
     </Router>
+    </>
   );
 }
 

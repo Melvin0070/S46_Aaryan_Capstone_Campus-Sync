@@ -4,6 +4,8 @@ import Modal from './modal';
 import './comments.css';
 import { getCookie } from './cookies.jsx'; //import cookies functions from cookie.jsx
 import axios from 'axios';  // Import Axios directly
+import { toast } from 'react-toastify'; // Import toast from React-Toastify
+import 'react-toastify/dist/ReactToastify.css'; // Import the CSS for toast notifications
 
 function Comments() {
   const [comments, setComments] = useState([]);
@@ -42,6 +44,7 @@ function Comments() {
         console.error("Access token expired or invalid");
         // Handle logout or redirect to login page
       } else {
+        toast.error('Error fetching comments.'); // Error notification
         console.error('Error fetching comments:', error);
       }
     }
@@ -65,9 +68,9 @@ function Comments() {
       });
       setComment('');
       fetchComments(accessToken);
+      toast.success("Comment added successfully!"); // Success notification
     } catch (error) {
-      console.error('Error creating comment:', error);
-      // Handle error (e.g., show a message to the user)
+      toast.error('Error creating comment. Please try again.'); // Error notification
     }
   };
 
@@ -85,6 +88,7 @@ function Comments() {
           },
         });
         fetchComments(accessToken);
+        toast.success("Comment liked!"); // Success notification
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -92,6 +96,7 @@ function Comments() {
         // Handle logout or redirect to login page
       } else {
         console.error('Error updating comment:', error);
+        toast.error('Error liking comment. Please try again.'); // Error notification
       }
     }
   };
@@ -103,7 +108,7 @@ function Comments() {
       setModalOpen(true);
     } catch (error) {
       console.error('Error deleting comment:', error);
-      // Handle error (e.g., show a message to the user)
+      toast.error('Error deleting comment. Please try again.'); // Error notification
     }
   };
 
@@ -116,12 +121,14 @@ function Comments() {
       });
       setModalOpen(false);
       fetchComments(accessToken);
+      toast.success("Comment deleted successfully!"); // Success notification
     } catch (error) {
       if (error.response && error.response.status === 401) {
         console.error("Access token expired or invalid");
         // Handle logout or redirect to login page
       } else {
         console.error('Error deleting comment:', error);
+        toast.error('Error deleting comment. Please try again.'); // Error notification
       }
     }
   };

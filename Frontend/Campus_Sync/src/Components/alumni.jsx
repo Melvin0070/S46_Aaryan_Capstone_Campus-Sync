@@ -1,15 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import './alumni.css';
-import { getCookie } from './cookies.jsx'; 
+import { getCookie } from './cookies.jsx';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Alumni() {
   const [alumni, setAlumni] = useState([]);
   const [loading, setLoading] = useState(true);
   const token = getCookie('accessToken'); // Retrieve JWT token from cookies
+  const toastShown = useRef(false); // useRef to track whether the success toast has been shown
 
   useEffect(() => {
     const fetchAlumni = async () => {
+      setLoading(true); // Set loading to true before fetching data
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_SERVER_URL}/alumnis/details`,
@@ -19,16 +23,23 @@ function Alumni() {
             },
           }
         );
-        setAlumni(response.data);
+
+        const { message, alumnis } = response.data; // Extract alumni and message from response
+        setAlumni(alumnis);
+
+        if (!toastShown.current) {
+          toast.success(message);
+          toastShown.current = true;
+        }
       } catch (error) {
-        console.error('Error fetching alumni data:', error);
+        toast.error('Error fetching alumni data.');
       } finally {
-        setLoading(false);
+        setLoading(false); // Set loading to false after fetching data
       }
     };
 
     fetchAlumni();
-  }, [token]); //Get the alumni whenever the token changes
+  }, [token]); // Run the effect when the token changes
 
   return (
     <div className="alumni-container">
