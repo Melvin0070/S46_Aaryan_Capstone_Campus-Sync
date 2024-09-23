@@ -8,6 +8,9 @@ import help from "../assets/helpdesk.png";
 import logout from "../assets/logout.jpg";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { removeCookie, getCookie } from "../Components/cookies.jsx";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 function Sidebar() {
   const location = useLocation(); // Get the current location
@@ -27,7 +30,7 @@ function Sidebar() {
     removeCookie("username");    
     removeCookie("email");      
     removeCookie("accessToken"); 
-    console.log("Logged out successfully"); 
+    toast.success("Logged out successfully"); 
     navigate("/"); 
   };
 

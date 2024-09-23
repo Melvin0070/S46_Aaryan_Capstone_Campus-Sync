@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./rank.css";
 import { getCookie } from './cookies'; 
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Rank() {
   const [scoresData, setScoresData] = useState([]);
@@ -10,8 +12,7 @@ function Rank() {
   const [results, setResults] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
- 
-  const token = getCookie("accessToken");  //retrieve token from cookies
+  const token = getCookie("accessToken");  // Retrieve token from cookies
 
   useEffect(() => {
     fetchScoresData();
@@ -27,7 +28,7 @@ function Rank() {
       });
       setScoresData(response.data);
     } catch (error) {
-      console.error("Error fetching scores:", error);
+      toast.error("Error fetching scores. Please try again."); // Notify about the error
     }
   };
 
@@ -56,7 +57,13 @@ function Rank() {
     // Sort the results in descending order of percentage
     filteredResults.sort((a, b) => b.percentage - a.percentage);
 
-    setResults(filteredResults);
+    if (filteredResults.length > 0) {
+      setResults(filteredResults);
+      toast.success("Results filtered and ranked successfully."); // Notify successful ranking
+    } else {
+      toast.info("No results found for the selected exam and date."); // Notify when no results are found
+    }
+
     setCurrentIndex(0); // Reset to the first page of results
   };
 

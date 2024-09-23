@@ -1,19 +1,21 @@
 import axios from "axios";
 import { getCookie } from "./cookies";
+import { toast } from "react-toastify"; 
+import "react-toastify/dist/ReactToastify.css";
 
 const handlePayment = async (feeId, callback) => {
   const token = getCookie("accessToken"); // Retrieve token from cookies
 
   try {
     // Step 1: Fetch fee details using feeId
-    const feeDetailsUrl = `${
-      import.meta.env.VITE_SERVER_URL
-    }/fees/details/${feeId}`;
+    const feeDetailsUrl = `${import.meta.env.VITE_SERVER_URL}/fees/details/${feeId}`;
     const response = await axios.get(feeDetailsUrl, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
+
+    toast.info("Fetched fee details successfully."); // Notify about successful fee details fetching
 
     // Step 2: Create Razorpay order
     const orderUrl = `${import.meta.env.VITE_SERVER_URL}/razorpay/create-order`;
@@ -27,6 +29,8 @@ const handlePayment = async (feeId, callback) => {
         Authorization: `Bearer ${token}`,
       },
     });
+
+    toast.info("Order created successfully."); // Notify about successful order creation
 
     // Step 3: Configure Razorpay options and open payment handler
     const options = {
@@ -51,16 +55,18 @@ const handlePayment = async (feeId, callback) => {
             currency: orderResponse.data.currency,
           };
 
-          const verifyPaymentUrl = `${
-            import.meta.env.VITE_SERVER_URL
-          }/razorpay/verify-payment`;
+          const verifyPaymentUrl = `${import.meta.env.VITE_SERVER_URL}/razorpay/verify-payment`;
           const result = await axios.post(verifyPaymentUrl, verificationData, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           });
-          console.log("Verification Result:", result.data);
-          alert(`Payment ${result.data.status}`);
+
+          if (result.data.status === "success") {
+            toast.success("Payment successful!"); // Notify about successful payment verification
+          } else {
+            toast.error("Payment failed during verification."); // Notify about failed verification
+          }
 
           // Step 5: Call the callback function with true if payment was successful
           if (
@@ -70,7 +76,7 @@ const handlePayment = async (feeId, callback) => {
             callback(true);
           }
         } catch (error) {
-          console.error("Error verifying payment:", error);
+          toast.error("Error verifying payment. Please try again."); // Notify about verification error
 
           // Step 6: Call the callback function with false if payment verification fails
           if (typeof callback === "function") {
@@ -87,7 +93,7 @@ const handlePayment = async (feeId, callback) => {
     const rzp1 = new window.Razorpay(options);
     rzp1.open();
   } catch (error) {
-    console.error("Error handling payment:", error);
+    toast.error("Error handling payment. Please try again."); // Notify about general payment handling error
   }
 };
 

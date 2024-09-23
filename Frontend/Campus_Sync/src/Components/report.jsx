@@ -3,6 +3,9 @@ import axios from "axios";
 import "./report.css";
 import { getCookie } from './cookies'; 
 import { jwtDecode } from "jwt-decode";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 function Report() {
   const [id, setId] = useState("");
@@ -13,12 +16,14 @@ function Report() {
   const token = getCookie("accessToken"); // Retrieve token from cookies
 
   useEffect(() => {
-    fetchReportDetails();
+    if (token) {
+      fetchReportDetails();
+    }
   }, [token]); // Fetch report details whenever token changes
 
   const fetchReportDetails = () => {
     if (!token) {
-      console.error("Token not found in cookies");
+      toast.error("Token not found in cookies.");
       return;
     }
 
@@ -27,7 +32,7 @@ function Report() {
       const userID = decodedToken.ID;
 
       axios
-        .get(import.meta.env.VITE_SERVER_URL + `/reports/details/${userID}`, {
+        .get(`${import.meta.env.VITE_SERVER_URL}/reports/details/${userID}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -36,10 +41,10 @@ function Report() {
           setReportData(response.data.reverse());
         })
         .catch((error) => {
-          console.error("Error fetching reports:", error);
+          toast.error("Failed to fetch reports. Please try again.");
         });
     } catch (error) {
-      console.error("Error decoding token:", error);
+      toast.error("Error decoding token.");
     }
   };
 
@@ -47,7 +52,7 @@ function Report() {
     e.preventDefault();
 
     if (!token) {
-      console.error("Token not found in cookies");
+      toast.error("Token not found in cookies.");
       return;
     }
 
@@ -62,7 +67,7 @@ function Report() {
       };
 
       const response = await axios.post(
-        import.meta.env.VITE_SERVER_URL + "/reports/create",
+        `${import.meta.env.VITE_SERVER_URL}/reports/create`,
         reportData,
         {
           headers: {
@@ -72,17 +77,14 @@ function Report() {
       );
 
       if (response.status === 201) {
-        alert("Report created successfully");
-        fetchReportDetails();
+        toast.success("Report created successfully!");
+        fetchReportDetails(); // Refresh the report list after creation
         setId("");
         setConcern("");
         setProposal("");
-      } else {
-        alert(`Error: ${response.data.message}`);
       }
     } catch (error) {
-      console.error("Error creating report:", error);
-      alert("Internal server error");
+      toast.error("Internal server error. Please try again.");
     }
   };
 

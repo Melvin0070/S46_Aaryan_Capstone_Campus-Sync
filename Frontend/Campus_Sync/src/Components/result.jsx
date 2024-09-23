@@ -2,33 +2,40 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./result.css";
 import { getCookie } from './cookies'; 
-import { jwtDecode } from "jwt-decode";
+import  {jwtDecode}  from "jwt-decode";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 function Result() {
   const [score, setScore] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Retrieve the JWT token from cookies or local storage
-  const token = getCookie("accessToken"); 
+  // Retrieve the JWT token from cookies
+  const token = getCookie("accessToken");
   let userID = null;
 
   if (token) {
     try {
       // Decode the token to get the user ID
-      const decodedToken = jwtDecode(token); 
+      const decodedToken = jwtDecode(token);
       userID = decodedToken.ID;
     } catch (error) {
-      console.error("Invalid token", error);
+      toast.error("Invalid token. Unable to decode user information.", {
+      });
     }
   }
 
   useEffect(() => {
-    fetchScoreDetails();
-  }, [token]);  // Fetch rewsult details whenever token changes
+    if (token) {``
+      fetchScoreDetails();
+    }
+  }, [token]); // Fetch result details whenever token changes
 
   const fetchScoreDetails = () => {
     if (!userID) {
-      console.error("User ID is not available in the token");
+      toast.error("User ID is not available in the token.", {
+      });
       return;
     }
 
@@ -47,7 +54,8 @@ function Result() {
         setScore(reversedScore);
       })
       .catch((error) => {
-        console.error(error);
+        toast.error("Failed to fetch score details. Please try again.", {
+        });
       });
   };
 

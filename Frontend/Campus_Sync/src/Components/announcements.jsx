@@ -4,6 +4,8 @@ import rightArrow from "../assets/right-arrow-short.png";
 import { Link } from "react-router-dom";
 import { getCookie } from "./cookies.jsx";
 import axios from "axios"; // Import Axios directly
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Announcements() {
   const [files, setFiles] = useState([]);
@@ -26,7 +28,7 @@ function Announcements() {
       });
       setFiles(Array.isArray(response.data) ? response.data.reverse() : []);
     } catch (error) {
-      console.error("Error fetching files:", error);
+      toast.error("Error announcement details. Please try again.");
     } finally {
       setLoading(false);
     }

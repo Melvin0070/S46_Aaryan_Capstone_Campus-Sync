@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "./drop.css";
 import { getCookie } from "./cookies.jsx";
+import { toast } from "react-toastify"; 
+import "react-toastify/dist/ReactToastify.css";
 
 function Drop() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -11,17 +13,16 @@ function Drop() {
   const [topic, setTopic] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [filterUser, setFilterUser] = useState(""); // State for the selected filter
+  const [filterUser, setFilterUser] = useState("");
   const fileInputRef = useRef(null);
-  const token = getCookie("accessToken"); // Retrieve JWT token from cookies
-  const usernameFromCookie = getCookie("username"); // Retrieve username from cookies
+  const token = getCookie("accessToken");
+  const usernameFromCookie = getCookie("username");
 
   useEffect(() => {
     if (usernameFromCookie) {
-      setUsername(usernameFromCookie); // Set the username state with the username from cookies
+      setUsername(usernameFromCookie);
     }
-
-    fetchFiles(); // Fetch files when the component mounts or when the token changes
+    fetchFiles();
   }, [token]);
 
   const fetchFiles = async () => {
@@ -31,7 +32,7 @@ function Drop() {
         `${import.meta.env.VITE_SERVER_URL}/drops/files`,
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Include JWT token in headers if needed
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -41,7 +42,7 @@ function Drop() {
       setFiles(filesData);
       setFilteredFiles(filesData);
     } catch (error) {
-      console.error(error);
+      toast.error("Error fetching files.");
     }
     setLoading(false);
   };
@@ -57,7 +58,7 @@ function Drop() {
   const handleUpload = async (e) => {
     e.preventDefault();
     if (!selectedFile || !topic) {
-      console.error("Please select a file and enter a topic.");
+      toast.error("Please select a file and enter a topic.");
       return;
     }
     setLoading(true);
@@ -67,23 +68,23 @@ function Drop() {
     formData.append("uploadedBy", username);
 
     try {
-      await axios.post(
+      const response = await axios.post(
         `${import.meta.env.VITE_SERVER_URL}/drops/upload`,
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`, // Include JWT token in headers if needed
+            Authorization: `Bearer ${token}`,
           },
         }
       );
-      console.log("File Uploaded Successfully");
+      toast.success(response.data.message);
       setSelectedFile(null);
       setTopic("");
       fetchFiles();
       fileInputRef.current.value = "";
     } catch (error) {
-      console.error("File upload failed.", error);
+      toast.error("Error uploading file.");
     }
     setLoading(false);
   };
@@ -95,18 +96,17 @@ function Drop() {
         `${import.meta.env.VITE_SERVER_URL}/drops/files/${fileId}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Include JWT token in headers if needed
+            Authorization: `Bearer ${token}`,
           },
           data: { uploadedBy: username },
         }
       );
       if (response.status === 200) {
+        toast.success("File deleted successfully.");
         fetchFiles();
-      } else {
-        console.error("Failed to delete the file.");
       }
     } catch (error) {
-      console.error(error);
+      toast.error("Error deleting file.");
     }
     setLoading(false);
   };
@@ -132,12 +132,15 @@ function Drop() {
       setFilteredFiles(
         files.filter((file) => file.uploadedBy === selectedUser)
       );
-      setCurrentIndex(0); // Reset carousel index when filter changes
+      setCurrentIndex(0);
     }
   };
 
-  // Extract unique usernames for dropdown
   const uniqueUsers = [...new Set(files.map((file) => file.uploadedBy))];
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="drop-container">
@@ -171,9 +174,7 @@ function Drop() {
 
         <div className="carousel-section">
           <div className="carousel">
-            {loading ? (
-              <div className="drop-loading">Loading...</div>
-            ) : filteredFiles.length > 0 ? (
+            {filteredFiles.length > 0 ? (
               <>
                 <button
                   className="carousel-button"
@@ -196,7 +197,6 @@ function Drop() {
                         </option>
                       ))}
                     </select>
-                    <div className="filter-section"></div>
                     <p id="file-topic">{filteredFiles[currentIndex].topic}</p>
                     <div className="file-upload-details">
                       <p className="file-uploader">
@@ -265,3 +265,4 @@ function Drop() {
 }
 
 export default Drop;
+

@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { setCookie } from "../Components/cookies";
 import sideframe from "../assets/side-frame.jpg";
 import loginLogo from "../assets/login-logo.png";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./Login.css";
 
 const LoginPage = () => {
@@ -26,12 +28,18 @@ const LoginPage = () => {
         setCookie("email", email, 1);
         setCookie("accessToken", response.data.accessToken, 1); // Store accessToken in cookies
 
-        navigate("/home"); // Redirect to home page upon successful login
+        toast.success("Login successful! Redirecting to home...", {
+        });
+        setTimeout(() => {
+          navigate("/home");
+        }, 1500);
       } else {
-        console.log("ID number does not match any existing user.");
+        toast.error("Error logging in user. Please try again.", {
+        });
       }
     } catch (error) {
-      console.error("Error logging in user:", error);
+      toast.error("ID number does not match any existing user.", {
+      });
     } finally {
       setLoading(false);
     }
